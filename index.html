@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camilú Maquillajes — Tienda Online</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nude: {
+                            50: '#FBF9F6',
+                            100: '#F4EFEA',
+                            200: '#E8DFD5',
+                            300: '#D5C3B3',
+                            500: '#B89A82',
+                            700: '#8A6A53',
+                        },
+                        rosegold: {
+                            DEFAULT: '#C5A087',
+                            light: '#E2C7B5',
+                            dark: '#A37E67',
+                        },
+                        brand: {
+                            dark: '#1A1A1A',
+                            accent: '#D4AF37'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F4EFEA;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #C5A087;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-nude-50 text-brand-dark font-sans flex flex-col min-h-screen antialiased selection:bg-rosegold selection:text-white">
+
+    <!-- BARRA DE ANUNCIOS SUPERIOR -->
+    <div class="bg-brand-dark text-nude-100 text-xs py-2 px-4 text-center tracking-wider font-medium uppercase sticky top-0 z-50 shadow-md">
+        <span>Envíos a todo el país | 3 cuotas sin interés | 10% OFF por transferencia</span>
+    </div>
+
+    <!-- NAVEGACIÓN PRINCIPAL -->
+    <header class="bg-white/90 backdrop-blur-md border-b border-nude-200 sticky top-8 z-40 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Buscador (Escritorio) -->
+            <div class="hidden md:flex items-center w-1/4">
+                <div class="relative w-full">
+                    <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="Buscar productos..." class="w-full bg-nude-50 border border-nude-200 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-rosegold transition-all">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-nude-500 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- LOGO DE MARCA -->
+            <div class="text-center">
+                <a href="#" class="inline-block">
+                    <h1 class="font-serif text-2xl sm:text-3xl font-semibold tracking-widest uppercase text-brand-dark">Camilú</h1>
+                    <span class="block text-[10px] tracking-[0.3em] uppercase text-rosegold font-sans font-medium -mt-1">Maquillajes</span>
+                </a>
+            </div>
+
+            <!-- Acciones / Carrito -->
+            <div class="flex items-center space-x-4 w-1/4 justify-end">
+                <button onclick="openAdminModal()" class="text-xs text-nude-700 hover:text-rosegold font-medium uppercase tracking-wider hidden sm:inline-block">
+                    <i class="fa-solid fa-lock mr-1"></i> Admin
+                </button>
+                <button onclick="toggleCart()" class="relative p-2 text-brand-dark hover:text-rosegold transition-colors">
+                    <i class="fa-solid fa-bag-shopping text-xl"></i>
+                    <span id="cart-count" class="absolute -top-1 -right-1 bg-rosegold text-white text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-white">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Buscador Móvil -->
+        <div class="md:hidden px-4 pb-3">
+            <div class="relative w-full">
+                <input type="text" id="search-input-mobile" onkeyup="filterProductsMobile()" placeholder="Buscar productos..." class="w-full bg-nude-50 border border-nude-200 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-rosegold">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-nude-500 text-xs"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- BANNER HERO PRINCIPAL -->
+    <section class="relative bg-nude-100 overflow-hidden py-12 md:py-20 border-b border-nude-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-xl text-center md:text-left">
+                <span class="text-rosegold font-semibold text-xs uppercase tracking-widest mb-2 block">Nueva Colección 2026</span>
+                <h2 class="font-serif text-3xl sm:text-5xl text-brand-dark font-medium leading-tight mb-4">Resalta tu belleza natural</h2>
+                <p class="text-nude-700 text-sm sm:text-base mb-8 leading-relaxed">Descubrí nuestra selección exclusiva de cosmética profesional, bases, labiales y cuidado de la piel. Envíos garantizados a todo el país.</p>
+                <a href="#catalogo" class="inline-block bg-brand-dark text-white font-medium text-xs uppercase tracking-widest px-8 py-4 rounded-md hover:bg-rosegold transition-colors shadow-lg">Ver Productos</a>
+            </div>
+        </div>
+        <div class="absolute right-0 top-0 bottom-0 w-1/2 hidden md:block opacity-30 lg:opacity-60 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&auto=format&fit=crop');"></div>
+    </section>
+
+    <!-- SECCIÓN DE BENEFICIOS -->
+    <section class="bg-white py-8 border-b border-nude-200">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div class="p-2">
+                <i class="fa-solid fa-truck text-rosegold text-xl mb-2"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-brand-dark">Envíos a todo el país</h4>
+                <p class="text-[11px] text-nude-700 mt-0.5">A través de correo o retiro en local</p>
+            </div>
+            <div class="p-2">
+                <i class="fa-solid fa-credit-card text-rosegold text-xl mb-2"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-brand-dark">3 Cuotas sin interés</h4>
+                <p class="text-[11px] text-nude-700 mt-0.5">Con todas las tarjetas elegibles</p>
+            </div>
+            <div class="p-2">
+                <i class="fa-solid fa-percent text-rosegold text-xl mb-2"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-brand-dark">10% OFF Transferencia</h4>
+                <p class="text-[11px] text-nude-700 mt-0.5">Descuento automático en carrito</p>
+            </div>
+            <div class="p-2">
+                <i class="fa-brands fa-whatsapp text-rosegold text-xl mb-2"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-brand-dark">Atención Personalizada</h4>
+                <p class="text-[11px] text-nude-700 mt-0.5">Asesoramiento directo en línea</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CATÁLOGO PRINCIPAL -->
+    <main id="catalogo" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow">
+        <!-- FILTROS Y CATEGORÍAS -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-4 border-b border-nude-200 gap-4">
+            <div class="flex items-center space-x-2 overflow-x-auto pb-2 md:pb-0 custom-scrollbar">
+                <button onclick="setCategory('todos')" class="cat-btn active bg-brand-dark text-white px-4 py-2 rounded-full text-xs font-medium uppercase tracking-wider whitespace-nowrap transition-all">Todos</button>
+                <button onclick="setCategory('Rostro')" class="cat-btn bg-white border border-nude-200 text-brand-dark px-4 py-2 rounded-full text-xs font-medium uppercase tracking-wider whitespace-nowrap hover:border-rosegold transition-all">Rostro</button>
+                <button onclick="setCategory('Ojos')" class="cat-btn bg-white border border-nude-200 text-brand-dark px-4 py-2 rounded-full text-xs font-medium uppercase tracking-wider whitespace-nowrap hover:border-rosegold transition-all">Ojos</button>
+                <button onclick="setCategory('Labios')" class="cat-btn bg-white border border-nude-200 text-brand-dark px-4 py-2 rounded-full text-xs font-medium uppercase tracking-wider whitespace-nowrap hover:border-rosegold transition-all">Labios</button>
+                <button onclick="setCategory('Skincare')" class="cat-btn bg-white border border-nude-200 text-brand-dark px-4 py-2 rounded-full text-xs font-medium uppercase tracking-wider whitespace-nowrap hover:border-rosegold transition-all">Skincare</button>
+                <button onclick="setCategory('oferta')" class="cat-btn bg-rosegold text-white px-4 py-2 rounded-full text-xs font-medium uppercase tracking-wider whitespace-nowrap transition-all">Ofertas %</button>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <span class="text-xs text-nude-700 font-medium">Ordenar:</span>
+                <select id="sort-select" onchange="sortProducts()" class="bg-white border border-nude-200 text-xs py-2 px-3 rounded-md text-brand-dark focus:outline-none focus:border-rosegold">
+                    <option value="featured">Destacados</option>
+                    <option value="price-low">Precio: Menor a Mayor</option>
+                    <option value="price-high">Precio: Mayor a Menor</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- GRILLA DE PRODUCTOS -->
+        <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            <!-- Productos inyectados por JavaScript -->
+        </div>
+    </main>
+
+    <!-- FOOTER INSTITUCIONAL -->
+    <footer class="bg-brand-dark text-nude-100 py-12 border-t border-nude-700 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+            <div>
+                <h3 class="font-serif text-2xl uppercase tracking-widest mb-2">Camilú</h3>
+                <p class="text-xs text-nude-300 leading-relaxed max-w-sm">Tienda especializada en cosmética, productos de maquillaje y cuidado personal. Calidad garantizada.</p>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-rosegold mb-3">Atención al Cliente</h4>
+                <ul class="text-xs space-y-2 text-nude-300">
+                    <li><i class="fa-brands fa-whatsapp text-rosegold mr-2"></i> Contacto Directo WhatsApp</li>
+                    <li><i class="fa-solid fa-location-dot text-rosegold mr-2"></i> Retiro en Local Comercial</li>
+                    <li><i class="fa-solid fa-shield-halved text-rosegold mr-2"></i> Compras Seguras</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-rosegold mb-3">Medios de Pago Aceptados</h4>
+                <div class="flex justify-center md:justify-start space-x-3 text-2xl text-nude-300">
+                    <i class="fa-brands fa-cc-visa"></i>
+                    <i class="fa-brands fa-cc-mastercard"></i>
+                    <i class="fa-solid fa-money-bill-transfer"></i>
+                    <i class="fa-solid fa-barcode"></i>
+                </div>
+                <p class="text-[11px] text-nude-500 mt-3">© 2026 Camilú Maquillajes. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL SLIDE-OVER DEL CARRITO -->
+    <div id="cart-modal" class="fixed inset-0 z-50 hidden transition-opacity">
+        <div onclick="toggleCart()" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+                <!-- Header Carrito -->
+                <div class="p-4 sm:p-6 bg-nude-50 border-b border-nude-200 flex items-center justify-between">
+                    <h3 class="font-serif text-lg font-semibold text-brand-dark uppercase tracking-wider">Tu Carrito</h3>
+                    <button onclick="toggleCart()" class="text-nude-700 hover:text-brand-dark p-2">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Lista de Productos -->
+                <div id="cart-items" class="flex-grow overflow-y-auto p-4 sm:p-6 space-y-4 custom-scrollbar">
+                    <!-- Ítems agregados dinámicamente -->
+                </div>
+
+                <!-- Footer Checkout -->
+                <div class="p-4 sm:p-6 border-t border-nude-200 bg-nude-50 space-y-4">
+                    <!-- Método de Envío -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark">Opción de Entrega</label>
+                        <select id="shipping-method" onchange="updateCartTotal()" class="w-full bg-white border border-nude-200 text-xs py-2 px-3 rounded-md text-brand-dark">
+                            <option value="pickup">Retiro Gratis en Local</option>
+                            <option value="ship">Envío a Domicilio (Cotizar por CP)</option>
+                        </select>
+                        <input type="text" id="postal-code" placeholder="Código Postal (ej: 5730)" class="w-full bg-white border border-nude-200 text-xs py-2 px-3 rounded-md mt-1">
+                    </div>
+
+                    <!-- Método de Pago -->
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark">Método de Pago</label>
+                        <select id="payment-method" onchange="updateCartTotal()" class="w-full bg-white border border-nude-200 text-xs py-2 px-3 rounded-md text-brand-dark">
+                            <option value="transfer">Transferencia Bancaria (10% OFF)</option>
+                            <option value="card">Tarjeta de Crédito (Hasta 3 cuotas)</option>
+                            <option value="cash">Efectivo al retirar</option>
+                        </select>
+                    </div>
+
+                    <!-- Resumen Totales -->
+                    <div class="space-y-1 text-xs pt-2 border-t border-nude-200">
+                        <div class="flex justify-between text-nude-700">
+                            <span>Subtotal:</span>
+                            <span id="cart-subtotal">$0</span>
+                        </div>
+                        <div id="discount-row" class="flex justify-between text-rosegold font-medium">
+                            <span>Descuento Transferencia (10%):</span>
+                            <span id="cart-discount">-$0</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold text-brand-dark pt-1">
+                            <span>Total Final:</span>
+                            <span id="cart-total">$0</span>
+                        </div>
+                    </div>
+
+                    <!-- Datos Comprador -->
+                    <div class="space-y-2">
+                        <input type="text" id="customer-name" placeholder="Tu Nombre Completo *" class="w-full bg-white border border-nude-200 text-xs py-2 px-3 rounded-md">
+                    </div>
+
+                    <button onclick="submitOrderWhatsApp()" class="w-full bg-rosegold hover:bg-rosegold-dark text-white text-xs uppercase font-bold tracking-widest py-3.5 rounded-md shadow-md transition-colors flex items-center justify-center space-x-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Confirmar Pedido por WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALLE DE PRODUCTO -->
+    <div id="product-modal" class="fixed inset-0 z-50 hidden transition-opacity">
+        <div onclick="closeProductModal()" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col md:flex-row relative max-h-[90vh]">
+                <button onclick="closeProductModal()" class="absolute top-3 right-3 text-brand-dark hover:text-rosegold bg-white/80 rounded-full w-8 h-8 flex items-center justify-center z-10">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="w-full md:w-1/2 bg-nude-100 flex items-center justify-center p-4">
+                    <img id="modal-img" src="" alt="" class="max-h-64 md:max-h-80 object-contain rounded-lg">
+                </div>
+                <div class="w-full md:w-1/2 p-6 flex flex-col justify-between overflow-y-auto">
+                    <div>
+                        <span id="modal-category" class="text-[10px] uppercase font-bold text-rosegold tracking-widest block mb-1">Categoría</span>
+                        <h3 id="modal-title" class="font-serif text-xl font-semibold text-brand-dark mb-2">Nombre del producto</h3>
+                        <div class="flex items-baseline space-x-2 mb-4">
+                            <span id="modal-price" class="text-xl font-bold text-brand-dark">$0</span>
+                            <span id="modal-old-price" class="text-xs text-nude-500 line-through"></span>
+                        </div>
+                        <p id="modal-desc" class="text-xs text-nude-700 leading-relaxed mb-6">Descripción detallada del producto cosmético.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button id="modal-add-btn" onclick="" class="w-full bg-brand-dark text-white text-xs uppercase font-bold tracking-widest py-3 rounded-md hover:bg-rosegold transition-colors">Agregar al Carrito</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LOGIN ADMIN -->
+    <div id="admin-modal" class="fixed inset-0 z-50 hidden">
+        <div onclick="closeAdminModal()" class="absolute inset-0 bg-black/50"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-lg p-6 max-w-md w-full shadow-xl relative">
+                <h3 class="font-serif text-lg font-bold text-brand-dark mb-4">Acceso Administrativo</h3>
+                <input type="password" id="admin-pass" placeholder="Contraseña de Administrador (admin123)" class="w-full bg-nude-50 border border-nude-200 text-xs py-2.5 px-3 rounded-md mb-4">
+                <div class="flex justify-end space-x-2">
+                    <button onclick="closeAdminModal()" class="px-4 py-2 text-xs text-nude-700">Cancelar</button>
+                    <button onclick="loginAdmin()" class="px-4 py-2 bg-brand-dark text-white text-xs uppercase font-bold rounded-md">Ingresar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT DE LÓGICA DE TIENDA -->
+    <script>
+        // CATÁLOGO INICIAL SEMILLA
+        const defaultProducts = [
+            { id: 1, nombre: "Base Líquida Matte HD", categoria: "Rostro", precio: 8500, oferta: true, precio_oferta: 7200, imagen: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=500&auto=format&fit=crop", desc: "Base de alta cobertura con acabado mate duradero. Ideal para todo tipo de piel." },
+            { id: 2, nombre: "Labial Humectante Velvet", categoria: "Labios", precio: 4300, oferta: false, precio_oferta: null, imagen: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=500&auto=format&fit=crop", desc: "Labial cremoso enriquecido con vitamina E para máxima hidratación." },
+            { id: 3, nombre: "Paleta Sombras Nude 12 Colores", categoria: "Ojos", precio: 12500, oferta: true, precio_oferta: 10500, imagen: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&auto=format&fit=crop", desc: "Sombras en tonos neutros y satinados de alta pigmentación." },
+            { id: 4, nombre: "Máscara Pestañas Waterproof", categoria: "Ojos", precio: 5900, oferta: false, precio_oferta: null, imagen: "https://images.unsplash.com/photo-1591360236480-4ed861025fa1?w=500&auto=format&fit=crop", desc: "Volumen extremo a prueba de agua que no genera grumos." },
+            { id: 5, nombre: "Sérum Facial Hidratante Glow", categoria: "Skincare", precio: 9800, oferta: false, precio_oferta: null, imagen: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500&auto=format&fit=crop", desc: "Sérum con ácido hialurónico para devolver la luminosidad al rostro." },
+            { id: 6, nombre: "Rubor en Crema Glow Natural", categoria: "Rostro", precio: 4800, oferta: true, precio_oferta: 3990, imagen: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=500&auto=format&fit=crop", desc: "Rubor ligero fácil de difuminar para un efecto sonrojado natural." }
+        ];
+
+        // Estado Global
+        let products = JSON.parse(localStorage.getItem('camilu_products')) || defaultProducts;
+        let cart = JSON.parse(localStorage.getItem('camilu_cart')) || [];
+        let currentCategory = 'todos';
+
+        // Guardar cambios en productos
+        function saveProducts() {
+            localStorage.setItem('camilu_products', JSON.stringify(products));
+        }
+
+        // Guardar cambios en carrito
+        function saveCart() {
+            localStorage.setItem('camilu_cart', JSON.stringify(cart));
+            updateCartBadge();
+        }
+
+        // Renderizar Productos
+        function renderProducts(itemsToRender = products) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+
+            itemsToRender.forEach(p => {
+                const finalPrice = p.oferta && p.precio_oferta ? p.precio_oferta : p.precio;
+                const card = document.createElement('div');
+                card.className = "bg-white border border-nude-200 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col justify-between group";
+                
+                card.innerHTML = `
+                    <div class="relative overflow-hidden cursor-pointer bg-nude-50 p-4" onclick="openProductModal(${p.id})">
+                        ${p.oferta ? `<span class="absolute top-2 left-2 bg-rosegold text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full z-10">Oferta</span>` : ''}
+                        <img src="${p.imagen}" alt="${p.nombre}" class="w-full h-44 object-contain group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-4 flex flex-col flex-grow justify-between">
+                        <div>
+                            <span class="text-[10px] uppercase font-bold text-nude-500 tracking-wider block mb-1">${p.categoria}</span>
+                            <h3 class="font-serif text-sm font-semibold text-brand-dark mb-2 cursor-pointer hover:text-rosegold" onclick="openProductModal(${p.id})">${p.nombre}</h3>
+                        </div>
+                        <div>
+                            <div class="flex items-baseline space-x-2 mb-3">
+                                <span class="text-base font-bold text-brand-dark">$${finalPrice.toLocaleString('es-AR')}</span>
+                                ${p.oferta && p.precio_oferta ? `<span class="text-xs text-nude-500 line-through">$${p.precio.toLocaleString('es-AR')}</span>` : ''}
+                            </div>
+                            <button onclick="addToCart(${p.id})" class="w-full bg-nude-100 border border-nude-300 text-brand-dark text-[11px] uppercase font-bold tracking-wider py-2 rounded-md hover:bg-brand-dark hover:text-white transition-colors">
+                                Agregar
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filtro por Categoría
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('bg-brand-dark', 'text-white'));
+            
+            let filtered = products;
+            if (cat === 'oferta') {
+                filtered = products.filter(p => p.oferta);
+            } else if (cat !== 'todos') {
+                filtered = products.filter(p => p.categoria === cat);
+            }
+            renderProducts(filtered);
+        }
+
+        // Búsqueda en vivo
+        function filterProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = products.filter(p => p.nombre.toLowerCase().includes(query) || p.categoria.toLowerCase().includes(query));
+            renderProducts(filtered);
+        }
+
+        function filterProductsMobile() {
+            const query = document.getElementById('search-input-mobile').value.toLowerCase();
+            const filtered = products.filter(p => p.nombre.toLowerCase().includes(query) || p.categoria.toLowerCase().includes(query));
+            renderProducts(filtered);
+        }
+
+        // Ordenamiento
+        function sortProducts() {
+            const val = document.getElementById('sort-select').value;
+            let sorted = [...products];
+            if (val === 'price-low') {
+                sorted.sort((a, b) => (a.oferta ? a.precio_oferta : a.precio) - (b.oferta ? b.precio_oferta : b.precio));
+            } else if (val === 'price-high') {
+                sorted.sort((a, b) => (b.oferta ? b.precio_oferta : b.precio) - (a.oferta ? a.precio_oferta : a.precio));
+            }
+            renderProducts(sorted);
+        }
+
+        // Carrito
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden');
+            renderCartItems();
+        }
+
+        function addToCart(id) {
+            const p = products.find(prod => prod.id === id);
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...p, qty: 1 });
+            }
+            saveCart();
+            toggleCart();
+        }
+
+        function updateQty(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += change;
+                if (item.qty <= 0) {
+                    cart = cart.filter(i => i.id !== id);
+                }
+            }
+            saveCart();
+            renderCartItems();
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cart-items');
+            container.innerHTML = '';
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-xs text-nude-700 text-center py-8">Tu carrito está vacío.</p>`;
+                updateCartTotal();
+                return;
+            }
+
+            cart.forEach(item => {
+                const price = item.oferta && item.precio_oferta ? item.precio_oferta : item.precio;
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between border-b border-nude-200 pb-3";
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <img src="${item.imagen}" class="w-12 h-12 object-contain bg-nude-50 rounded-md">
+                        <div>
+                            <h4 class="text-xs font-bold text-brand-dark">${item.nombre}</h4>
+                            <span class="text-[11px] text-nude-700">$${price.toLocaleString('es-AR')}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="updateQty(${item.id}, -1)" class="w-6 h-6 bg-nude-200 rounded text-xs font-bold">-</button>
+                        <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+                        <button onclick="updateQty(${item.id}, 1)" class="w-6 h-6 bg-nude-200 rounded text-xs font-bold">+</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            updateCartTotal();
+        }
+
+        function updateCartTotal() {
+            let subtotal = 0;
+            cart.forEach(item => {
+                const price = item.oferta && item.precio_oferta ? item.precio_oferta : item.precio;
+                subtotal += price * item.qty;
+            });
+
+            const payMethod = document.getElementById('payment-method').value;
+            let discount = 0;
+            if (payMethod === 'transfer') {
+                discount = subtotal * 0.10;
+            }
+
+            const total = subtotal - discount;
+
+            document.getElementById('cart-subtotal').innerText = `$${subtotal.toLocaleString('es-AR')}`;
+            document.getElementById('cart-discount').innerText = `-$${discount.toLocaleString('es-AR')}`;
+            document.getElementById('cart-total').innerText = `$${total.toLocaleString('es-AR')}`;
+        }
+
+        function updateCartBadge() {
+            const count = cart.reduce((acc, item) => acc + item.qty, 0);
+            document.getElementById('cart-count').innerText = count;
+        }
+
+        // WhatsApp Checkout
+        function submitOrderWhatsApp() {
+            const name = document.getElementById('customer-name').value.trim();
+            if (!name) {
+                alert('Por favor decinos tu nombre antes de confirmar.');
+                return;
+            }
+            if (cart.length === 0) {
+                alert('El carrito está vacío.');
+                return;
+            }
+
+            const shipMethod = document.getElementById('shipping-method').selectedOptions[0].text;
+            const payMethod = document.getElementById('payment-method').selectedOptions[0].text;
+            const postalCode = document.getElementById('postal-code').value.trim();
+
+            let msg = `*NUEVO PEDIDO — CAMILÚ MAQUILLAJES*
+`;
+            msg += `*Cliente:* ${name}
+`;
+            if (postalCode) msg += `*Código Postal:* ${postalCode}
+`;
+            msg += `*Entrega:* ${shipMethod}
+`;
+            msg += `*Forma de Pago:* ${payMethod}
+
+`;
+            msg += `*DETALLE DEL CARRITO:*
+`;
+
+            cart.forEach(i => {
+                const price = i.oferta && i.precio_oferta ? i.precio_oferta : i.precio;
+                msg += `• ${i.qty}x ${i.nombre} — $${(price * i.qty).toLocaleString('es-AR')}
+`;
+            });
+
+            msg += `
+*TOTAL ESTIMADO:* ${document.getElementById('cart-total').innerText}
+`;
+            msg += `
+_¡Hola! Quisiera confirmar este pedido y acordar el pago/envío._`;
+
+            const phone = "5492657000000"; // Número del local
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // Modales
+        function openProductModal(id) {
+            const p = products.find(prod => prod.id === id);
+            const finalPrice = p.oferta && p.precio_oferta ? p.precio_oferta : p.precio;
+            
+            document.getElementById('modal-img').src = p.imagen;
+            document.getElementById('modal-category').innerText = p.categoria;
+            document.getElementById('modal-title').innerText = p.nombre;
+            document.getElementById('modal-desc').innerText = p.desc || "Producto cosmético de alta calidad.";
+            document.getElementById('modal-price').innerText = `$${finalPrice.toLocaleString('es-AR')}`;
+            document.getElementById('modal-old-price').innerText = p.oferta ? `$${p.precio.toLocaleString('es-AR')}` : '';
+            
+            document.getElementById('modal-add-btn').onclick = function() {
+                addToCart(p.id);
+                closeProductModal();
+            };
+
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function loginAdmin() {
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === 'admin123') {
+                alert('Bienvenido al Panel de Control. Podés agregar o modificar productos desde la consola.');
+                closeAdminModal();
+            } else {
+                alert('Contraseña incorrecta.');
+            }
+        }
+
+        // Inicio
+        renderProducts();
+        updateCartBadge();
+    </script>
+</body>
+</html>
