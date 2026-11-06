@@ -90,7 +90,7 @@
 
             <!-- Desktop Search Bar -->
             <div class="hidden lg:flex flex-1 max-w-xs relative">
-                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Buscar bases, labiales, sombras..." 
+                <input type="text" id="searchInput" oninput="handleSearch(false)" placeholder="Buscar bases, labiales, sombras..." 
                     class="w-full bg-cream-100/70 border border-cream-200 rounded-full py-2 pl-10 pr-4 text-xs font-medium focus:outline-none focus:border-dark focus:bg-white transition-all placeholder:text-neutral-400">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-2.5 text-neutral-400 text-xs"></i>
                 <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-2 text-neutral-400 hover:text-dark text-xs">
@@ -99,9 +99,9 @@
             </div>
 
             <!-- BRAND LOGO EDITORIAL -->
-            <a href="#" onclick="filterCategory('Todos')" class="text-center group">
+            <a href="#" onclick="filterCategory('Todos')" class="text-center group flex-shrink-0">
                 <span class="font-display font-extrabold text-2xl sm:text-3xl tracking-tighter uppercase text-dark block leading-none group-hover:text-rosegold transition-colors">CAMILÚ</span>
-                <span class="text-[9px] sm:text-[10px] font-bold tracking-[0.4em] text-rosegold uppercase block mt-1">MAQUILLAJES </span>
+                <span class="text-[9px] sm:text-[10px] font-bold tracking-[0.4em] text-rosegold uppercase block mt-1">MAQUILLAJES</span>
             </a>
 
             <!-- ACTIONS (ADMIN + CART) -->
@@ -113,7 +113,7 @@
 
                 <button onclick="toggleCartDrawer()" class="relative bg-dark hover:bg-rosegold text-white p-3 rounded-full transition-all flex items-center justify-center shadow-lg group">
                     <i class="fa-solid fa-bag-shopping text-sm group-hover:scale-110 transition-transform"></i>
-                    <span id="cartBadge" class="absolute -top-1 -right-1 bg-rosegold text-white font-extrabold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">
+                    <span id="cartBadge" class="absolute -top-1 -right-1 bg-rosegold text-white font-extrabold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white scale-0 transition-transform">
                         0
                     </span>
                 </button>
@@ -282,7 +282,7 @@
 
     <!-- SHOPPING CART DRAWER -->
     <div id="cartDrawer" class="fixed inset-0 z-50 hidden modal-backdrop flex justify-end">
-        <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col">
+        <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300" id="cartDrawerContent">
             
             <div class="p-6 bg-cream-50 border-b border-cream-200 flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -294,7 +294,7 @@
                         <p id="drawerItemCount" class="text-[10px] font-semibold text-neutral-400">0 ítems</p>
                     </div>
                 </div>
-                <button onclick="toggleCartDrawer()" class="w-8 h-8 rounded-full bg-white text-dark hover:bg-cream-200 flex items-center justify-center border border-cream-200">
+                <button onclick="toggleCartDrawer()" class="w-8 h-8 rounded-full bg-white text-dark hover:bg-cream-200 flex items-center justify-center border border-cream-200 transition-colors">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -315,14 +315,14 @@
                 <div class="mb-4 space-y-3">
                     <div>
                         <label class="block text-[10px] font-extrabold uppercase tracking-wider text-dark mb-1">Método de Entrega:</label>
-                        <select id="cartDeliveryMethod" onchange="renderCartUI()" class="w-full text-xs font-semibold p-2.5 rounded-xl border border-cream-200 bg-white">
+                        <select id="cartDeliveryMethod" onchange="renderCartUI()" class="w-full text-xs font-semibold p-2.5 rounded-xl border border-cream-200 bg-white focus:outline-none focus:border-rosegold">
                             <option value="Retiro en Local">Retiro sin cargo en Local</option>
                             <option value="Envío a Domicilio">Envío a Domicilio (Cotizar por CP)</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-[10px] font-extrabold uppercase tracking-wider text-dark mb-1">Medio de Pago:</label>
-                        <select id="cartPaymentMethod" onchange="renderCartUI()" class="w-full text-xs font-semibold p-2.5 rounded-xl border border-cream-200 bg-white">
+                        <select id="cartPaymentMethod" onchange="renderCartUI()" class="w-full text-xs font-semibold p-2.5 rounded-xl border border-cream-200 bg-white focus:outline-none focus:border-rosegold">
                             <option value="Transferencia Bancaria">Transferencia Bancaria (10% OFF)</option>
                             <option value="Tarjeta / Mercado Pago">Tarjeta de Crédito / Mercado Pago (Hasta 3 cuotas)</option>
                             <option value="Efectivo al Retirar">Efectivo al Retirar</option>
@@ -332,8 +332,8 @@
 
                 <!-- Customer Details -->
                 <div class="space-y-2 mb-4">
-                    <input type="text" id="custName" placeholder="Nombre y Apellido *" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 focus:outline-none focus:border-dark">
-                    <input type="text" id="custNotes" placeholder="Dirección / Código Postal / Notas" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 focus:outline-none focus:border-dark">
+                    <input type="text" id="custName" placeholder="Nombre y Apellido *" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 focus:outline-none focus:border-rosegold">
+                    <input type="text" id="custNotes" placeholder="Dirección / Código Postal / Notas" class="w-full text-xs p-2.5 rounded-xl border border-cream-200 focus:outline-none focus:border-rosegold">
                 </div>
 
                 <!-- Subtotals -->
@@ -370,10 +370,10 @@
                     <i class="fa-solid fa-lock"></i>
                 </div>
                 <h3 class="font-display font-extrabold text-dark text-base uppercase">Acceso Administrativo</h3>
-                <p class="text-xs text-neutral-400 mt-1">Ingresá la clave de gestión para modificar el inventario.</p>
+                <p class="text-xs text-neutral-400 mt-1">Ingresá la clave de gestión para modificar el inventario. (admin123)</p>
             </div>
             <form onsubmit="handleAdminLogin(event)">
-                <input type="password" id="adminPassword" placeholder="Clave de acceso (admin123)" required 
+                <input type="password" id="adminPassword" placeholder="Clave de acceso" required 
                     class="w-full text-xs p-3 rounded-xl border border-cream-200 mb-4 focus:outline-none focus:border-dark">
                 <button type="submit" class="w-full py-3 bg-dark text-white font-extrabold text-xs uppercase tracking-widest rounded-full hover:bg-rosegold transition-all">
                     Ingresar
@@ -391,7 +391,7 @@
                     <i class="fa-solid fa-sliders text-rosegold text-xl"></i>
                     <div>
                         <h3 class="font-display font-extrabold text-base uppercase">Panel de Gestión</h3>
-                        <p class="text-[10px] text-neutral-400">Catálogo autónomo persistido en localStorage</p>
+                        <p class="text-[10px] text-neutral-400">Catálogo autónomo persistido en navegador</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
@@ -407,8 +407,9 @@
             <div class="flex-1 overflow-y-auto p-6 space-y-6">
                 <!-- Form -->
                 <div class="bg-cream-50 p-6 rounded-2xl border border-cream-200">
-                    <h4 class="font-bold text-dark text-xs uppercase tracking-wider mb-4">Agregar Nuevo Producto</h4>
+                    <h4 class="font-bold text-dark text-xs uppercase tracking-wider mb-4">Agregar / Editar Producto</h4>
                     <form onsubmit="handleSaveProduct(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <input type="hidden" id="adminId">
                         <div>
                             <label class="block text-[10px] font-bold uppercase text-neutral-500 mb-1">SKU / Cód. Sistema</label>
                             <input type="text" id="adminCode" required placeholder="CM-010" class="w-full text-xs p-2.5 rounded-xl border border-cream-200">
@@ -453,7 +454,8 @@
                             <label class="block text-[10px] font-bold uppercase text-neutral-500 mb-1">Descripción</label>
                             <textarea id="adminDescription" rows="2" placeholder="Detalles de acabado, duración..." class="w-full text-xs p-2.5 rounded-xl border border-cream-200"></textarea>
                         </div>
-                        <div class="sm:col-span-3 flex justify-end">
+                        <div class="sm:col-span-3 flex justify-end gap-3">
+                            <button type="button" onclick="resetAdminForm()" class="px-6 py-2.5 bg-white border border-cream-200 text-dark font-extrabold text-xs uppercase tracking-widest rounded-full transition-all">Limpiar</button>
                             <button type="submit" class="px-6 py-2.5 bg-dark hover:bg-rosegold text-white font-extrabold text-xs uppercase tracking-widest rounded-full transition-all">
                                 Guardar Producto
                             </button>
@@ -491,650 +493,527 @@
                 <div class="md:col-span-2">
                     <h3 class="font-display font-extrabold text-2xl tracking-tighter uppercase text-white">CAMILÚ</h3>
                     <span class="text-[10px] font-bold tracking-[0.4em] text-rosegold uppercase block mb-4">MAQUILLAJES</span>
-                    <p class="text-xs text-neutral-400 leading-relaxed max-w-sm">
-                        Tienda online especializada en cosmética profesional. Envíos garantizados a todo el país y atención personalizada.
+                    <p class="text-xs text-neutral-400 leading-relaxed max-w-sm mx-auto md:mx-0">
+                        Tienda online especializada en cosmética profesional. Envíos garantizados a todo el país y atención personalizada para resaltar tu belleza.
                     </p>
                 </div>
                 <div>
-                    <h4 class="text-xs font-bold uppercase tracking-widest text-rosegold mb-4">Atención & Ayuda</h4>
-                    <ul class="text-xs space-y-2.5 text-neutral-400">
+                    <h4 class="text-xs font-bold uppercase tracking-widest text-rosegold mb-4">Atención & Contacto</h4>
+                    <ul class="text-xs space-y-3 text-neutral-400">
                         <li class="flex items-center justify-center md:justify-start gap-2">
-                            <i class="fa-brands fa-whatsapp text-rosegold"></i> Atencion directa por WhatsApp
+                            <i class="fa-solid fa-truck-fast w-4 text-center text-rosegold"></i> Envíos a todo el país
                         </li>
                         <li class="flex items-center justify-center md:justify-start gap-2">
-                            <i class="fa-solid fa-store text-rosegold"></i> Retiro sin cargo en local
+                            <i class="fa-brands fa-whatsapp w-4 text-center text-rosegold"></i> +54 9 2657 00-0000
                         </li>
                         <li class="flex items-center justify-center md:justify-start gap-2">
-                            <i class="fa-solid fa-shield-halved text-rosegold"></i> Compras 100% Seguras
+                            <i class="fa-solid fa-envelope w-4 text-center text-rosegold"></i> hola@camilumaquillajes.com
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-xs font-bold uppercase tracking-widest text-rosegold mb-4">Redes Sociales</h4>
-                    <div class="flex justify-center md:justify-start gap-4 text-lg">
-                        <a href="#" class="w-9 h-9 rounded-full bg-neutral-800 hover:bg-rosegold hover:text-white flex items-center justify-center transition-all"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" class="w-9 h-9 rounded-full bg-neutral-800 hover:bg-rosegold hover:text-white flex items-center justify-center transition-all"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" class="w-9 h-9 rounded-full bg-neutral-800 hover:bg-rosegold hover:text-white flex items-center justify-center transition-all"><i class="fa-brands fa-whatsapp"></i></a>
+                    <h4 class="text-xs font-bold uppercase tracking-widest text-rosegold mb-4">Síguenos</h4>
+                    <div class="flex items-center justify-center md:justify-start gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-neutral-800 text-white flex items-center justify-center hover:bg-rosegold hover:text-white transition-all">
+                            <i class="fa-brands fa-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-neutral-800 text-white flex items-center justify-center hover:bg-rosegold hover:text-white transition-all">
+                            <i class="fa-brands fa-tiktok text-lg"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-neutral-800 text-white flex items-center justify-center hover:bg-rosegold hover:text-white transition-all">
+                            <i class="fa-brands fa-facebook-f text-lg"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="mt-12 pt-8 border-t border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-500 gap-4">
-                <p>© 2026 Camilú Makeup & Beauty. Todos los derechos reservados.</p>
-                <div class="flex gap-4">
-                    <span>Envíos a todo el país</span>
-                    <span>•</span>
-                    <span>10% OFF Transferencia</span>
-                </div>
+            <div class="border-t border-neutral-800 mt-12 pt-8 text-center flex flex-col items-center">
+                <p class="text-[10px] text-neutral-500 uppercase tracking-widest font-bold">
+                    &copy; 2026 Camilú Maquillajes. Todos los derechos reservados.
+                </p>
             </div>
         </div>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- LÓGICA JAVASCRIPT -->
     <script>
-        const INITIAL_PRODUCTS = [
-            {
-                id: "CM-001",
-                code: "PHY-1001",
-                title: "Base Líquida Skin Silk HD",
-                category: "Rostro",
-                price: 12500,
-                oldPrice: 14900,
-                isOffer: true,
-                stock: 20,
-                images: [
-                    "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&auto=format&fit=crop&q=80",
-                    "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&auto=format&fit=crop&q=80"
-                ],
-                description: "Base fluida con acabado aterciopelado y cobertura modulable. Enriquecida con ácido hialurónico."
-            },
-            {
-                id: "CM-002",
-                code: "PHY-1002",
-                title: "Labial Velvet Matte Lip Tint",
-                category: "Labios",
-                price: 6800,
-                oldPrice: null,
-                isOffer: false,
-                stock: 15,
-                images: [
-                    "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=600&auto=format&fit=crop&q=80"
-                ],
-                description: "Tinta de labios hidratante con acabado mate suave. Sensación ligera sin resecar."
-            },
-            {
-                id: "CM-003",
-                code: "PHY-1003",
-                title: "Paleta Nude Radiance 12 Tonos",
-                category: "Ojos",
-                price: 18900,
-                oldPrice: 22000,
-                isOffer: true,
-                stock: 8,
-                images: [
-                    "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=600&auto=format&fit=crop&q=80"
-                ],
-                description: "Sombras hiper-pigmentadas con acabados mate y satinado ideal para cualquier look."
-            },
-            {
-                id: "CM-004",
-                code: "PHY-1004",
-                title: "Máscara Lash Lift Waterproof",
-                category: "Ojos",
-                price: 9400,
-                oldPrice: null,
-                isOffer: false,
-                stock: 30,
-                images: [
-                    "https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?w=600&auto=format&fit=crop&q=80"
-                ],
-                description: "Efecto elevación instantánea sin grumos. Cepillo ergonómico a prueba de agua."
-            },
-            {
-                id: "CM-005",
-                code: "PHY-1005",
-                title: "Corrector Creamy Concealer",
-                category: "Rostro",
-                price: 7200,
-                oldPrice: 8500,
-                isOffer: true,
-                stock: 12,
-                images: [
-                    "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?w=600&auto=format&fit=crop&q=80"
-                ],
-                description: "Cubre imperfecciones e ilumina la zona del contorno de ojos sin marcar pliegues."
-            },
-            {
-                id: "CM-006",
-                code: "PHY-1006",
-                title: "Gloss Plumping 3D Shine",
-                category: "Labios",
-                price: 5900,
-                oldPrice: null,
-                isOffer: false,
-                stock: 18,
-                images: [
-                    "https://images.unsplash.com/photo-1599733589046-10c005739ef9?w=600&auto=format&fit=crop&q=80"
-                ],
-                description: "Brillo voluminizador con reflejos tridimensionales no pegajoso."
-            },
-            {
-                id: "CM-007",
-                code: "PHY-1007",
-                title: "Sérum Hidratante Glow Botanical",
-                category: "Skincare",
-                price: 11200,
-                oldPrice: 13500,
-                isOffer: true,
-                stock: 10,
-                images: [
-                    "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&auto=format&fit=crop&q=80"
-                ],
-                description: "Sérum preparador de piel con extractos botánicos que aporta luminosidad antes del maquillaje."
-            }
+        // --- DATA & STATE ---
+        const defaultProducts = [
+            { id: 'CM-001', name: 'Base Fluida Luminous', category: 'Rostro', price: 22000, oldPrice: 25000, stock: 15, images: ['https://images.unsplash.com/photo-1631214500115-598fc2cb8d2d?auto=format&fit=crop&q=80&w=500'], isOffer: true, description: 'Base de maquillaje con acabado luminoso y cobertura construible. Enriquecida con ácido hialurónico.' },
+            { id: 'CM-002', name: 'Labial Velvet Matte', category: 'Labios', price: 12500, oldPrice: null, stock: 20, images: ['https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&q=80&w=500'], isOffer: false, description: 'Labial líquido de acabado ultra mate. Larga duración sin resecar los labios.' },
+            { id: 'CM-003', name: 'Paleta Sombras Nude', category: 'Ojos', price: 35000, oldPrice: 40000, stock: 8, images: ['https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500'], isOffer: true, description: '12 tonos neutros altamente pigmentados, perfectos para looks de día y noche.' },
+            { id: 'CM-004', name: 'Serum Vitamina C', category: 'Skincare', price: 28000, oldPrice: null, stock: 12, images: ['https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=500'], isOffer: false, description: 'Sérum antioxidante que ilumina y unifica el tono de la piel.' },
+            { id: 'CM-005', name: 'Rubor Líquido Glow', category: 'Rostro', price: 14000, oldPrice: null, stock: 25, images: ['https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=500'], isOffer: false, description: 'Rubor líquido con acabado jugoso y natural que se funde perfectamente.' },
+            { id: 'CM-006', name: 'Máscara Extra Volumen', category: 'Ojos', price: 16000, oldPrice: 19000, stock: 30, images: ['https://images.unsplash.com/photo-1599305090598-fe179d501227?auto=format&fit=crop&q=80&w=500'], isOffer: true, description: 'Volumen extremo y longitud en una sola pasada. Fórmula a prueba de agua.' }
         ];
 
-        let products = [];
-        let cart = [];
-        let currentCategory = "Todos";
-        let searchQuery = "";
-        let activeModalProduct = null;
-        let selectedModalQty = 1;
-        let WHATSAPP_NUMBER = "5491123456789";
+        let products = JSON.parse(localStorage.getItem('camilu_products')) || defaultProducts;
+        let cart = JSON.parse(localStorage.getItem('camilu_cart')) || [];
+        
+        let currentCategory = 'Todos';
+        let searchQuery = '';
+        let currentModalProduct = null;
+        let modalQty = 1;
 
-        function loadProducts() {
-            const stored = localStorage.getItem('camilu_products_editorial');
-            if (stored) {
-                try {
-                    products = JSON.parse(stored);
-                } catch (e) {
-                    products = [...INITIAL_PRODUCTS];
-                }
-            } else {
-                products = [...INITIAL_PRODUCTS];
-            }
-        }
-
-        function saveProductsToStorage() {
-            localStorage.setItem('camilu_products_editorial', JSON.stringify(products));
-        }
-
-        function resetDefaultProducts() {
-            if (confirm("¿Restablecer el catálogo con los productos de demostración iniciales?")) {
-                products = [...INITIAL_PRODUCTS];
-                saveProductsToStorage();
-                renderCarousel();
-                renderCatalog();
-                if (!document.getElementById("adminPanelModal").classList.contains("hidden")) {
-                    renderAdminTable();
-                }
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            loadProducts();
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
             renderCarousel();
-            renderCatalog();
-            renderCartUI();
+            renderGrid();
+            updateCartBadge();
         });
 
-        // Renderizado de Vitrina Estilo Dapop
+        const formatMoney = (amount) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0 }).format(amount);
+
+        // --- RENDERING ---
         function renderCarousel() {
             const container = document.getElementById('carousel-container');
-            if (!container) return;
-            container.innerHTML = '';
+            const trending = products.filter(p => p.isOffer).slice(0, 6);
             
-            products.slice(0, 6).forEach(product => {
-                const hasOffer = product.isOffer && product.oldPrice;
-                const mainImg = product.images[0] || 'https://via.placeholder.com/400';
-
-                const card = document.createElement('div');
-                card.className = "snap-center flex-shrink-0 w-64 sm:w-72 bg-cream-50 border border-cream-200 rounded-2xl overflow-hidden flex flex-col justify-between group p-4 relative transition-all duration-300 hover:-translate-y-1 hover:shadow-md";
-                
-                card.innerHTML = `
-                    <div class="relative overflow-hidden cursor-pointer rounded-xl bg-white p-4 flex items-center justify-center h-48 mb-3" onclick="openProductModal('${product.id}')">
-                        ${hasOffer ? `<span class="absolute top-2 left-2 bg-rosegold text-white text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-full z-10 shadow-xs">SALE</span>` : ''}
-                        <img src="${mainImg}" alt="${product.title}" class="h-36 object-contain group-hover:scale-105 transition-transform duration-500">
+            container.innerHTML = trending.map(p => `
+                <div class="snap-start shrink-0 w-48 sm:w-56 bg-cream-50 rounded-2xl overflow-hidden border border-cream-200 cursor-pointer group" onclick="openProductModal('${p.id}')">
+                    <div class="h-56 relative overflow-hidden bg-white">
+                        <img src="${p.images[0]}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-2 left-2 bg-rosegold text-white text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest badge-glow">OFERTA</span>
                     </div>
-                    <div>
-                        <span class="text-[9px] font-extrabold uppercase tracking-widest text-rosegold block mb-1">${product.category}</span>
-                        <h3 class="font-display text-xs font-bold text-dark mb-2 hover:text-rosegold transition-colors cursor-pointer line-clamp-1" onclick="openProductModal('${product.id}')">${product.title}</h3>
-                        <div class="flex items-baseline space-x-2 mb-3">
-                            <span class="text-base font-extrabold text-dark">$${product.price.toLocaleString('es-AR')}</span>
-                            ${hasOffer ? `<span class="text-xs text-neutral-400 line-through font-semibold">$${product.oldPrice.toLocaleString('es-AR')}</span>` : ''}
+                    <div class="p-4 text-center">
+                        <h4 class="font-display font-extrabold text-sm uppercase text-dark truncate">${p.name}</h4>
+                        <div class="mt-1 flex justify-center gap-2 items-baseline">
+                            <span class="text-sm font-black text-dark">${formatMoney(p.price)}</span>
+                            ${p.oldPrice ? `<span class="text-[10px] text-neutral-400 line-through">${formatMoney(p.oldPrice)}</span>` : ''}
                         </div>
                     </div>
-                    <button onclick="addToCart('${product.id}')" class="w-full bg-dark text-white text-[10px] font-extrabold uppercase tracking-widest py-2.5 rounded-xl hover:bg-rosegold transition-all">
-                        + Agregar a la bolsa
-                    </button>
-                `;
-                container.appendChild(card);
-            });
+                </div>
+            `).join('');
         }
 
-        function scrollCarousel(amount) {
-            const container = document.getElementById('carousel-container');
-            if (container) {
-                container.scrollBy({ left: amount, behavior: 'smooth' });
+        function renderGrid() {
+            let filtered = products;
+            
+            if (currentCategory !== 'Todos' && currentCategory !== 'Ofertas') {
+                filtered = filtered.filter(p => p.category === currentCategory);
+            } else if (currentCategory === 'Ofertas') {
+                filtered = filtered.filter(p => p.isOffer);
             }
-        }
 
-        function renderCatalog() {
-            const grid = document.getElementById("productGrid");
-            const emptyState = document.getElementById("emptyCatalog");
-            grid.innerHTML = "";
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+            }
 
-            let filtered = products.filter(p => {
-                const matchesCategory = (currentCategory === "Todos") || 
-                                        (currentCategory === "Ofertas" ? p.isOffer : p.category === currentCategory);
-                const matchesSearch = p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                      p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                      p.code.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchesCategory && matchesSearch;
-            });
+            // Sorting
+            const sortVal = document.getElementById('sortSelect').value;
+            if (sortVal === 'price-low') filtered.sort((a, b) => a.price - b.price);
+            else if (sortVal === 'price-high') filtered.sort((a, b) => b.price - a.price);
+            else if (sortVal === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+            const grid = document.getElementById('productGrid');
+            const emptyState = document.getElementById('emptyCatalog');
 
             if (filtered.length === 0) {
-                grid.classList.add("hidden");
-                emptyState.classList.remove("hidden");
-                return;
-            }
-
-            grid.classList.remove("hidden");
-            emptyState.classList.add("hidden");
-
-            filtered.forEach(product => {
-                const hasOffer = product.isOffer && product.oldPrice;
-                const mainImg = product.images[0] || 'https://via.placeholder.com/400';
-
-                const card = document.createElement("div");
-                card.className = "bg-white border border-cream-200 rounded-2xl overflow-hidden p-4 flex flex-col justify-between group relative shadow-xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1";
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            } else {
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
                 
-                card.innerHTML = `
-                    <div class="relative bg-cream-50 rounded-xl p-4 cursor-pointer overflow-hidden flex items-center justify-center h-48 mb-3" onclick="openProductModal('${product.id}')">
-                        ${hasOffer ? `<span class="absolute top-3 left-3 bg-rosegold text-white text-[9px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-full shadow-xs z-10">SALE</span>` : ''}
-                        <img src="${mainImg}" alt="${product.title}" class="h-36 object-contain group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <div class="flex flex-col flex-grow justify-between">
-                        <div>
-                            <span class="text-[9px] font-extrabold uppercase tracking-widest text-rosegold block mb-1">${product.category}</span>
-                            <h3 class="font-display text-xs sm:text-sm font-bold text-dark mb-2 hover:text-rosegold transition-colors cursor-pointer line-clamp-1" onclick="openProductModal('${product.id}')">${product.title}</h3>
+                grid.innerHTML = filtered.map(p => `
+                    <div class="bg-white rounded-3xl overflow-hidden border border-cream-200 group flex flex-col cursor-pointer hover:shadow-lg transition-shadow" onclick="openProductModal('${p.id}')">
+                        <div class="aspect-square relative overflow-hidden bg-cream-50">
+                            <img src="${p.images[0]}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                            ${p.isOffer ? `<span class="absolute top-3 left-3 bg-rosegold text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest badge-glow">SALE</span>` : ''}
                         </div>
-                        <div class="pt-2">
-                            <div class="flex items-baseline space-x-2 mb-3">
-                                <span class="text-base sm:text-lg font-extrabold text-dark">$${product.price.toLocaleString('es-AR')}</span>
-                                ${hasOffer ? `<span class="text-xs text-neutral-400 line-through font-semibold">$${product.oldPrice.toLocaleString('es-AR')}</span>` : ''}
+                        <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <span class="text-[9px] font-bold uppercase tracking-widest text-neutral-400">${p.category}</span>
+                                <h3 class="font-display font-extrabold text-sm sm:text-base uppercase text-dark mt-0.5 leading-tight">${p.name}</h3>
                             </div>
-                            <button onclick="addToCart('${product.id}')" ${product.stock <= 0 ? 'disabled' : ''} 
-                                class="w-full py-2.5 px-3 bg-dark hover:bg-rosegold text-white font-extrabold text-[10px] uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 disabled:opacity-50">
-                                <i class="fa-solid fa-cart-plus"></i> Agregar
-                            </button>
+                            <div class="mt-3 flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-base sm:text-lg font-black text-dark leading-none">${formatMoney(p.price)}</span>
+                                    ${p.oldPrice ? `<span class="text-[10px] text-neutral-400 line-through mt-0.5">${formatMoney(p.oldPrice)}</span>` : ''}
+                                </div>
+                                <button class="w-8 h-8 rounded-full bg-cream-100 text-dark group-hover:bg-dark group-hover:text-white flex items-center justify-center transition-colors">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                `;
-                grid.appendChild(card);
-            });
+                `).join('');
+            }
         }
 
+        // --- FILTERING & SEARCH ---
         function filterCategory(cat) {
             currentCategory = cat;
-            document.querySelectorAll(".cat-btn").forEach(btn => {
+            document.querySelectorAll('.cat-btn').forEach(btn => {
                 if (btn.dataset.category === cat) {
-                    btn.className = "cat-btn bg-dark text-white px-5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap shadow-xs";
+                    btn.classList.replace('bg-cream-50', 'bg-dark');
+                    btn.classList.replace('text-dark', 'text-white');
+                    if(cat === 'Ofertas') btn.classList.add('bg-rosegold', 'text-white');
                 } else {
-                    btn.className = "cat-btn bg-cream-50 text-dark hover:bg-cream-100 border border-cream-200 px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap";
+                    btn.classList.replace('bg-dark', 'bg-cream-50');
+                    btn.classList.replace('text-white', 'text-dark');
+                    if(btn.dataset.category === 'Ofertas') {
+                        btn.classList.remove('bg-rosegold', 'text-white');
+                    }
                 }
             });
-            document.getElementById("catalogTitle").innerText = cat === "Todos" ? "Catálogo Exclusivo" : `Categoría: ${cat}`;
-            renderCatalog();
+
+            document.getElementById('catalogTitle').innerText = cat === 'Todos' ? 'Catálogo Exclusivo' : `Línea ${cat}`;
+            renderGrid();
+            document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
         }
 
         function handleSearch(isMobile = false) {
-            const input = isMobile ? document.getElementById("mobileSearchInput") : document.getElementById("searchInput");
-            searchQuery = input.value;
-            renderCatalog();
+            const inputId = isMobile ? 'mobileSearchInput' : 'searchInput';
+            searchQuery = document.getElementById(inputId).value;
+            
+            if(!isMobile) {
+                const clearBtn = document.getElementById('clearSearchBtn');
+                if(searchQuery.length > 0) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
+            renderGrid();
         }
 
         function clearSearch() {
-            searchQuery = "";
-            document.getElementById("searchInput").value = "";
-            document.getElementById("mobileSearchInput").value = "";
-            renderCatalog();
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('mobileSearchInput').value = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+            renderGrid();
         }
 
         function resetFilters() {
-            searchQuery = "";
-            currentCategory = "Todos";
-            filterCategory("Todos");
+            clearSearch();
+            filterCategory('Todos');
+            document.getElementById('sortSelect').value = 'default';
+            renderGrid();
         }
 
         function sortProducts() {
-            const val = document.getElementById("sortSelect").value;
-            if (val === "price-low") {
-                products.sort((a, b) => a.price - b.price);
-            } else if (val === "price-high") {
-                products.sort((a, b) => b.price - a.price);
-            } else if (val === "name") {
-                products.sort((a, b) => a.title.localeCompare(b.title));
-            } else {
-                loadProducts();
-            }
-            renderCatalog();
+            renderGrid();
         }
 
         function toggleMobileSearch() {
-            document.getElementById("mobileSearchContainer").classList.toggle("hidden");
+            const container = document.getElementById('mobileSearchContainer');
+            container.classList.toggle('hidden');
         }
 
-        // Modal
-        function openProductModal(id) {
-            activeModalProduct = products.find(p => p.id === id);
-            if (!activeModalProduct) return;
+        function scrollCarousel(offset) {
+            document.getElementById('carousel-container').scrollBy({ left: offset, behavior: 'smooth' });
+        }
 
-            selectedModalQty = 1;
-            document.getElementById("modalTitle").innerText = activeModalProduct.title;
-            document.getElementById("modalCategory").innerText = activeModalProduct.category;
-            document.getElementById("modalCode").innerText = `SKU: ${activeModalProduct.code}`;
-            document.getElementById("modalDescription").innerText = activeModalProduct.description || "Cosmética de alta calidad.";
-            document.getElementById("modalPrice").innerText = `$${activeModalProduct.price.toLocaleString('es-AR')}`;
+        // --- PRODUCT MODAL ---
+        function openProductModal(id) {
+            currentModalProduct = products.find(p => p.id === id);
+            if (!currentModalProduct) return;
             
-            const oldPriceEl = document.getElementById("modalOldPrice");
-            const offerBadge = document.getElementById("modalOfferBadge");
-            if (activeModalProduct.isOffer && activeModalProduct.oldPrice) {
-                oldPriceEl.innerText = `$${activeModalProduct.oldPrice.toLocaleString('es-AR')}`;
-                oldPriceEl.classList.remove("hidden");
-                offerBadge.classList.remove("hidden");
+            modalQty = 1;
+            document.getElementById('modalMainImage').src = currentModalProduct.images[0];
+            
+            const badge = document.getElementById('modalOfferBadge');
+            if(currentModalProduct.isOffer) badge.classList.remove('hidden');
+            else badge.classList.add('hidden');
+
+            document.getElementById('modalCategory').innerText = currentModalProduct.category;
+            document.getElementById('modalTitle').innerText = currentModalProduct.name;
+            document.getElementById('modalCode').innerText = `SKU: ${currentModalProduct.id}`;
+            document.getElementById('modalPrice').innerText = formatMoney(currentModalProduct.price);
+            
+            const oldPriceEl = document.getElementById('modalOldPrice');
+            if(currentModalProduct.oldPrice) {
+                oldPriceEl.innerText = formatMoney(currentModalProduct.oldPrice);
+                oldPriceEl.classList.remove('hidden');
             } else {
-                oldPriceEl.classList.add("hidden");
-                offerBadge.classList.add("hidden");
+                oldPriceEl.classList.add('hidden');
             }
 
-            document.getElementById("modalQty").innerText = selectedModalQty;
+            document.getElementById('modalDescription').innerText = currentModalProduct.description;
+            document.getElementById('modalQty').innerText = modalQty;
             
-            const mainImg = document.getElementById("modalMainImage");
-            mainImg.src = activeModalProduct.images[0] || '';
-            
-            const thumbsContainer = document.getElementById("modalThumbnails");
-            thumbsContainer.innerHTML = "";
-            activeModalProduct.images.forEach((img, idx) => {
-                const thumb = document.createElement("img");
-                thumb.src = img;
-                thumb.className = `w-12 h-12 rounded-lg object-cover cursor-pointer border-2 ${idx === 0 ? 'border-dark' : 'border-transparent'}`;
-                thumb.onclick = () => {
-                    mainImg.src = img;
-                    document.querySelectorAll("#modalThumbnails img").forEach(t => t.classList.replace('border-dark', 'border-transparent'));
-                    thumb.classList.replace('border-transparent', 'border-dark');
-                };
-                thumbsContainer.appendChild(thumb);
-            });
-
-            document.getElementById("productModal").classList.remove("hidden");
+            document.getElementById('productModal').classList.remove('hidden');
         }
 
         function closeProductModal() {
-            document.getElementById("productModal").classList.add("hidden");
-            activeModalProduct = null;
+            document.getElementById('productModal').classList.add('hidden');
+            currentModalProduct = null;
         }
 
         function updateModalQty(delta) {
-            if (selectedModalQty + delta >= 1) {
-                selectedModalQty += delta;
-                document.getElementById("modalQty").innerText = selectedModalQty;
+            if(modalQty + delta > 0 && modalQty + delta <= (currentModalProduct?.stock || 99)) {
+                modalQty += delta;
+                document.getElementById('modalQty').innerText = modalQty;
             }
         }
 
+        // --- CART LOGIC ---
         function addCurrentModalToCart() {
-            if (activeModalProduct) {
-                addToCart(activeModalProduct.id, selectedModalQty);
-                closeProductModal();
-            }
-        }
-
-        // Cart
-        function addToCart(productId, qty = 1) {
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-
-            const existing = cart.find(item => item.product.id === productId);
-            if (existing) {
-                existing.quantity += qty;
+            if(!currentModalProduct) return;
+            
+            const existingItem = cart.find(item => item.id === currentModalProduct.id);
+            if(existingItem) {
+                existingItem.qty += modalQty;
             } else {
-                cart.push({ product, quantity: qty });
+                cart.push({
+                    id: currentModalProduct.id,
+                    name: currentModalProduct.name,
+                    price: currentModalProduct.price,
+                    image: currentModalProduct.images[0],
+                    qty: modalQty
+                });
             }
-
-            renderCartUI();
-            toggleCartDrawer(true);
+            
+            saveCart();
+            closeProductModal();
+            toggleCartDrawer();
         }
 
-        function updateCartQty(productId, delta) {
-            const item = cart.find(i => i.product.id === productId);
-            if (!item) return;
-
-            item.quantity += delta;
-            if (item.quantity <= 0) {
-                cart = cart.filter(i => i.product.id !== productId);
-            }
+        function saveCart() {
+            localStorage.setItem('camilu_cart', JSON.stringify(cart));
+            updateCartBadge();
             renderCartUI();
         }
 
-        function removeFromCart(productId) {
-            cart = cart.filter(i => i.product.id !== productId);
-            renderCartUI();
+        function updateCartBadge() {
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            const badge = document.getElementById('cartBadge');
+            badge.innerText = count;
+            if(count > 0) badge.classList.remove('scale-0');
+            else badge.classList.add('scale-0');
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            const content = document.getElementById('cartDrawerContent');
+            
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+                renderCartUI();
+                setTimeout(() => content.classList.remove('translate-x-full'), 10);
+            } else {
+                content.classList.add('translate-x-full');
+                setTimeout(() => drawer.classList.add('hidden'), 300);
+            }
+        }
+
+        function updateCartItemQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if(item) {
+                item.qty += delta;
+                if(item.qty <= 0) cart = cart.filter(i => i.id !== id);
+                saveCart();
+            }
+        }
+
+        function removeCartItem(id) {
+            cart = cart.filter(i => i.id !== id);
+            saveCart();
         }
 
         function renderCartUI() {
-            const badge = document.getElementById("cartBadge");
-            const itemCount = document.getElementById("drawerItemCount");
-            const container = document.getElementById("cartItemsContainer");
-            const emptyState = document.getElementById("cartEmptyState");
-            const footer = document.getElementById("cartFooter");
-
-            const totalItems = cart.reduce((acc, i) => acc + i.quantity, 0);
-            badge.innerText = totalItems;
-            itemCount.innerText = `${totalItems} productos`;
+            const container = document.getElementById('cartItemsContainer');
+            const emptyState = document.getElementById('cartEmptyState');
+            const footer = document.getElementById('cartFooter');
+            
+            document.getElementById('drawerItemCount').innerText = `${cart.reduce((s,i)=>s+i.qty,0)} ítems`;
 
             if (cart.length === 0) {
-                container.classList.add("hidden");
-                emptyState.classList.remove("hidden");
-                footer.classList.add("hidden");
+                container.classList.add('hidden');
+                footer.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
                 return;
             }
 
-            container.classList.remove("hidden");
-            emptyState.classList.add("hidden");
-            footer.classList.remove("hidden");
+            container.classList.remove('hidden');
+            footer.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
 
-            container.innerHTML = "";
-            let subtotal = 0;
-
-            cart.forEach(item => {
-                const itemTotal = item.product.price * item.quantity;
-                subtotal += itemTotal;
-
-                const row = document.createElement("div");
-                row.className = "py-3 flex items-center gap-3";
-                row.innerHTML = `
-                    <img src="${item.product.images[0]}" alt="${item.product.title}" class="w-12 h-12 rounded-xl object-cover bg-cream-50">
-                    <div class="flex-1">
-                        <h4 class="font-bold text-dark text-xs uppercase line-clamp-1">${item.product.title}</h4>
-                        <span class="text-[10px] text-neutral-400 font-mono">SKU: ${item.product.code}</span>
-                        <div class="font-extrabold text-dark text-xs mt-0.5">$${item.product.price.toLocaleString('es-AR')}</div>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="flex items-center border border-cream-200 rounded-lg bg-cream-50">
-                            <button onclick="updateCartQty('${item.product.id}', -1)" class="w-5 h-5 text-xs text-dark font-bold">-</button>
-                            <span class="w-5 text-center text-xs font-bold text-dark">${item.quantity}</span>
-                            <button onclick="updateCartQty('${item.product.id}', 1)" class="w-5 h-5 text-xs text-dark font-bold">+</button>
+            container.innerHTML = cart.map(item => `
+                <div class="py-4 flex gap-4">
+                    <img src="${item.image}" class="w-16 h-16 object-cover rounded-xl border border-cream-200">
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div class="flex justify-between items-start">
+                            <h4 class="text-xs font-bold text-dark uppercase pr-2">${item.name}</h4>
+                            <button onclick="removeCartItem('${item.id}')" class="text-neutral-400 hover:text-rosegold"><i class="fa-solid fa-trash-can text-xs"></i></button>
                         </div>
-                        <button onclick="removeFromCart('${item.product.id}')" class="text-neutral-400 hover:text-red-500 p-1">
-                            <i class="fa-solid fa-trash-can text-xs"></i>
-                        </button>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-sm font-black text-dark">${formatMoney(item.price)}</span>
+                            <div class="flex items-center border border-cream-200 rounded-lg bg-white">
+                                <button onclick="updateCartItemQty('${item.id}', -1)" class="w-6 h-6 flex items-center justify-center text-dark font-bold hover:bg-cream-100 text-xs">-</button>
+                                <span class="w-6 text-center font-bold text-xs">${item.qty}</span>
+                                <button onclick="updateCartItemQty('${item.id}', 1)" class="w-6 h-6 flex items-center justify-center text-dark font-bold hover:bg-cream-100 text-xs">+</button>
+                            </div>
+                        </div>
                     </div>
-                `;
-                container.appendChild(row);
-            });
+                </div>
+            `).join('');
 
-            const payMethod = document.getElementById("cartPaymentMethod").value;
+            // Totals calculation
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const paymentMethod = document.getElementById('cartPaymentMethod').value;
             let discount = 0;
-            if (payMethod === "Transferencia Bancaria") {
+            
+            const discountRow = document.getElementById('cartDiscountRow');
+            if(paymentMethod.includes('Transferencia')) {
                 discount = subtotal * 0.10;
-                document.getElementById("cartDiscountRow").classList.remove("hidden");
+                discountRow.classList.remove('hidden');
+                document.getElementById('cartDiscount').innerText = `-${formatMoney(discount)}`;
             } else {
-                document.getElementById("cartDiscountRow").classList.add("hidden");
+                discountRow.classList.add('hidden');
             }
 
-            const total = subtotal - discount;
-
-            document.getElementById("cartSubtotal").innerText = `$${subtotal.toLocaleString('es-AR')}`;
-            document.getElementById("cartDiscount").innerText = `-$${discount.toLocaleString('es-AR')}`;
-            document.getElementById("cartTotal").innerText = `$${total.toLocaleString('es-AR')}`;
-        }
-
-        function toggleCartDrawer(forceOpen = false) {
-            const drawer = document.getElementById("cartDrawer");
-            if (forceOpen) {
-                drawer.classList.remove("hidden");
-            } else {
-                drawer.classList.toggle("hidden");
-            }
+            document.getElementById('cartSubtotal').innerText = formatMoney(subtotal);
+            document.getElementById('cartTotal').innerText = formatMoney(subtotal - discount);
         }
 
         function submitWhatsAppOrder() {
-            if (cart.length === 0) return;
+            const name = document.getElementById('custName').value.trim();
+            if(!name) { alert('Por favor, ingresá tu nombre.'); return; }
+            
+            const delivery = document.getElementById('cartDeliveryMethod').value;
+            const payment = document.getElementById('cartPaymentMethod').value;
+            const notes = document.getElementById('custNotes').value.trim();
+            
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const discount = payment.includes('Transferencia') ? subtotal * 0.10 : 0;
+            const total = subtotal - discount;
 
-            const custName = document.getElementById("custName").value.trim();
-            if (!custName) {
-                alert("Por favor ingresá tu Nombre y Apellido.");
-                return;
-            }
-
-            const delivery = document.getElementById("cartDeliveryMethod").value;
-            const payment = document.getElementById("cartPaymentMethod").value;
-            const notes = document.getElementById("custNotes").value.trim();
-
-            let msg = `*NUEVO PEDIDO - CAMILÚ MAQUILLAJES*\n`;
-            msg += `------------------------------------\n`;
-            msg += `*Cliente:* ${custName}\n`;
-            msg += `*Entrega:* ${delivery}\n`;
-            msg += `*Medio de Pago:* ${payment}\n`;
-            if (notes) msg += `*Notas / Direcc.:* ${notes}\n`;
-            msg += `------------------------------------\n`;
-            msg += `*DETALLE DEL PEDIDO:*\n`;
-
-            let subtotal = 0;
-            cart.forEach((item, index) => {
-                const sub = item.product.price * item.quantity;
-                subtotal += sub;
-                msg += `${index + 1}. ${item.product.title} (SKU: ${item.product.code})\n`;
-                msg += `   ${item.quantity} x $${item.product.price.toLocaleString('es-AR')} = *$${sub.toLocaleString('es-AR')}*\n`;
+            let msg = `Hola *Camilú Maquillajes*! ✨ Mi nombre es ${name} y quiero realizar un pedido:\n\n`;
+            cart.forEach(item => {
+                msg += `🔸 ${item.qty}x ${item.name} - ${formatMoney(item.price * item.qty)}\n`;
             });
+            
+            msg += `\n*Entrega:* ${delivery}`;
+            msg += `\n*Pago:* ${payment}`;
+            if(notes) msg += `\n*Datos extra:* ${notes}`;
+            
+            msg += `\n\n*Total a pagar: ${formatMoney(total)}*`;
 
-            let discount = payment === "Transferencia Bancaria" ? subtotal * 0.10 : 0;
-            let total = subtotal - discount;
-
-            msg += `------------------------------------\n`;
-            if (discount > 0) msg += `*Descuento (10% Transf.):* -$${discount.toLocaleString('es-AR')}\n`;
-            msg += `*TOTAL FINAL:* *$${total.toLocaleString('es-AR')}*\n\n`;
-            msg += `_¡Hola! Quisiera confirmar este pedido y acordar el pago._`;
-
-            const encodedMsg = encodeURIComponent(msg);
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMsg}`, '_blank');
+            const encoded = encodeURIComponent(msg);
+            window.open(`https://wa.me/5492657000000?text=${encoded}`, '_blank');
         }
 
-        // Admin Modal
+        // --- ADMIN PANEL ---
         function openAdminAuthModal() {
-            document.getElementById("adminAuthModal").classList.remove("hidden");
+            document.getElementById('adminAuthModal').classList.remove('hidden');
         }
-
         function closeAdminAuthModal() {
-            document.getElementById("adminAuthModal").classList.add("hidden");
+            document.getElementById('adminAuthModal').classList.add('hidden');
+            document.getElementById('adminPassword').value = '';
         }
 
         function handleAdminLogin(e) {
             e.preventDefault();
-            const pass = document.getElementById("adminPassword").value;
-            if (pass === "admin123") {
+            const pass = document.getElementById('adminPassword').value;
+            if(pass === 'admin123') { // Simple demo auth
                 closeAdminAuthModal();
-                document.getElementById("adminPassword").value = "";
-                openAdminPanel();
+                document.getElementById('adminPanelModal').classList.remove('hidden');
+                renderProductsAdmin();
             } else {
-                alert("Clave incorrecta.");
+                alert('Clave incorrecta');
+            }
+        }
+        function closeAdminPanelModal() {
+            document.getElementById('adminPanelModal').classList.add('hidden');
+        }
+
+        function resetDefaultProducts() {
+            if(confirm('¿Restablecer inventario demo? Se borrarán tus cambios.')) {
+                products = [...defaultProducts];
+                saveProducts();
+                renderProductsAdmin();
+                renderGrid();
+                renderCarousel();
             }
         }
 
-        function openAdminPanel() {
-            renderAdminTable();
-            document.getElementById("adminPanelModal").classList.remove("hidden");
-        }
-
-        function closeAdminPanelModal() {
-            document.getElementById("adminPanelModal").classList.add("hidden");
-        }
-
-        function renderAdminTable() {
-            const tbody = document.getElementById("adminProductsTable");
-            tbody.innerHTML = "";
-
-            products.forEach(p => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td class="p-3 font-mono font-bold">${p.code}</td>
-                    <td class="p-3 font-bold text-dark">${p.title}</td>
-                    <td class="p-3">${p.category}</td>
-                    <td class="p-3 font-bold text-dark">$${p.price.toLocaleString('es-AR')}</td>
-                    <td class="p-3 font-bold ${p.stock < 5 ? 'text-amber-600' : 'text-emerald-600'}">${p.stock} un.</td>
-                    <td class="p-3 text-right">
-                        <button onclick="deleteProduct('${p.id}')" class="text-red-600 font-bold text-xs bg-red-50 px-2 py-1 rounded-lg">
-                            Eliminar
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+        function saveProducts() {
+            localStorage.setItem('camilu_products', JSON.stringify(products));
         }
 
         function handleSaveProduct(e) {
             e.preventDefault();
-            
-            const code = document.getElementById("adminCode").value.trim();
-            const title = document.getElementById("adminTitle").value.trim();
-            const category = document.getElementById("adminCategory").value;
-            const price = parseFloat(document.getElementById("adminPrice").value);
-            const oldPrice = parseFloat(document.getElementById("adminOldPrice").value) || null;
-            const stock = parseInt(document.getElementById("adminStock").value);
-            const imagesStr = document.getElementById("adminImages").value.trim();
-            const isOffer = document.getElementById("adminIsOffer").value === "true";
-            const description = document.getElementById("adminDescription").value.trim();
-
-            const images = imagesStr ? imagesStr.split(",").map(s => s.trim()) : ["https://via.placeholder.com/400"];
-
-            const newProd = {
-                id: "CM-" + Date.now().toString().slice(-4),
-                code,
-                title,
-                category,
-                price,
-                oldPrice,
-                isOffer,
-                stock,
-                images,
-                description
+            const idToEdit = document.getElementById('adminId').value;
+            const newProduct = {
+                id: document.getElementById('adminCode').value,
+                name: document.getElementById('adminTitle').value,
+                category: document.getElementById('adminCategory').value,
+                price: parseFloat(document.getElementById('adminPrice').value),
+                oldPrice: document.getElementById('adminOldPrice').value ? parseFloat(document.getElementById('adminOldPrice').value) : null,
+                stock: parseInt(document.getElementById('adminStock').value),
+                images: document.getElementById('adminImages').value.split(',').map(s=>s.trim()),
+                isOffer: document.getElementById('adminIsOffer').value === 'true',
+                description: document.getElementById('adminDescription').value
             };
 
-            products.unshift(newProd);
-            saveProductsToStorage();
-            renderCatalog();
-            renderAdminTable();
+            if(idToEdit) {
+                products = products.map(p => p.id === idToEdit ? newProduct : p);
+            } else {
+                products.push(newProduct);
+            }
 
-            e.target.reset();
-            alert("Producto guardado exitosamente.");
+            saveProducts();
+            resetAdminForm();
+            renderProductsAdmin();
+            renderGrid();
+            renderCarousel();
+        }
+
+        function resetAdminForm() {
+            document.getElementById('adminId').value = '';
+            document.getElementById('adminCode').value = '';
+            document.getElementById('adminTitle').value = '';
+            document.getElementById('adminPrice').value = '';
+            document.getElementById('adminOldPrice').value = '';
+            document.getElementById('adminStock').value = '';
+            document.getElementById('adminImages').value = '';
+            document.getElementById('adminIsOffer').value = 'false';
+            document.getElementById('adminDescription').value = '';
+        }
+
+        function editProduct(id) {
+            const p = products.find(prod => prod.id === id);
+            if(!p) return;
+            
+            document.getElementById('adminId').value = p.id;
+            document.getElementById('adminCode').value = p.id;
+            document.getElementById('adminTitle').value = p.name;
+            document.getElementById('adminCategory').value = p.category;
+            document.getElementById('adminPrice').value = p.price;
+            document.getElementById('adminOldPrice').value = p.oldPrice || '';
+            document.getElementById('adminStock').value = p.stock;
+            document.getElementById('adminImages').value = p.images.join(', ');
+            document.getElementById('adminIsOffer').value = p.isOffer ? 'true' : 'false';
+            document.getElementById('adminDescription').value = p.description;
         }
 
         function deleteProduct(id) {
-            if (confirm("¿Eliminar este producto?")) {
+            if(confirm('¿Eliminar este producto?')) {
                 products = products.filter(p => p.id !== id);
-                saveProductsToStorage();
-                renderCatalog();
-                renderAdminTable();
+                saveProducts();
+                renderProductsAdmin();
+                renderGrid();
+                renderCarousel();
             }
+        }
+
+        function renderProductsAdmin() {
+            const tbody = document.getElementById('adminProductsTable');
+            tbody.innerHTML = products.map(p => `
+                <tr class="hover:bg-cream-50 transition-colors">
+                    <td class="p-3 font-mono">${p.id}</td>
+                    <td class="p-3 font-bold text-dark">${p.name}</td>
+                    <td class="p-3">${p.category}</td>
+                    <td class="p-3">${formatMoney(p.price)}</td>
+                    <td class="p-3">${p.stock}</td>
+                    <td class="p-3 text-right">
+                        <button onclick="editProduct('${p.id}')" class="text-neutral-500 hover:text-dark mr-3"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteProduct('${p.id}')" class="text-neutral-500 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
         }
     </script>
 </body>
