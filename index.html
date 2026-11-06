@@ -130,6 +130,29 @@
         </div>
     </header>
 
+    <!-- HERO CAROUSEL PRINCIPAL (ESTILO EDITORIAL - TIENDA NEGOCIO EDITABLE) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
+        <div class="relative w-full aspect-[16/7] sm:aspect-[21/8] md:aspect-[25/9] rounded-3xl overflow-hidden shadow-xl border border-cream-200 group bg-dark">
+            <!-- Slides Track -->
+            <div id="heroSlidesTrack" class="w-full h-full flex transition-transform duration-700 ease-out">
+                <!-- Dynamically rendered hero slides -->
+            </div>
+
+            <!-- Carousel Controls Overlay -->
+            <button onclick="prevHeroSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/70 hover:bg-white text-dark backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-md">
+                <i class="fa-solid fa-chevron-left text-sm"></i>
+            </button>
+            <button onclick="nextHeroSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/70 hover:bg-white text-dark backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-md">
+                <i class="fa-solid fa-chevron-right text-sm"></i>
+            </button>
+
+            <!-- Slide Indicators (Dots) -->
+            <div id="heroDotsContainer" class="absolute bottom-4 inset-x-0 flex justify-center items-center gap-2 z-10">
+                <!-- Dots generated JS -->
+            </div>
+        </div>
+    </section>
+
     <!-- SECCIÓN 1: CARRUSEL HORIZONTAL TIPO VITRINA ESTILO DAPOP -->
     <section id="vitrina-destacados" class="py-10 bg-white border-b border-cream-200 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 flex items-center justify-between">
@@ -195,7 +218,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-4 border-b border-cream-200">
             <div>
                 <h2 id="catalogTitle" class="font-display text-2xl sm:text-3xl font-extrabold text-dark uppercase tracking-tight">Catálogo Exclusivo</h2>
-                <p id="catalogSubtitle" class="text-xs text-neutral-500 font-medium mt-1">Selección de maquillaje profesional y cosmética</p>
+                <p id="catalogSubtitle" class="text-xs text-neutral-500 font-medium mt-1">Selección de maquillaje profesional con variantes de tonos</p>
             </div>
             <div class="flex items-center gap-3">
                 <label for="sortSelect" class="text-xs font-bold uppercase tracking-wider text-neutral-500">Ordenar:</label>
@@ -208,8 +231,8 @@
             </div>
         </div>
 
-        <!-- Product Grid -->
-        <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-8">
+        <!-- Product Grid (Dapop Style: Larger Aspect Ratio Cards with Shade Selectors on Hover) -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
             <!-- Dynamically Rendered Cards -->
         </div>
 
@@ -405,7 +428,25 @@
             </div>
 
             <div class="flex-1 overflow-y-auto p-6 space-y-6">
-                <!-- Form -->
+                <!-- Hero Banners Manager Section -->
+                <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-xs">
+                    <h4 class="font-bold text-dark text-xs uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-images text-rosegold"></i> Banners del Carrusel Principal
+                    </h4>
+                    <div id="adminHeroList" class="space-y-3 mb-4">
+                        <!-- List of current banners -->
+                    </div>
+                    <form onsubmit="handleAddHeroBanner(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <input type="text" id="adminHeroImg" required placeholder="URL Imagen (https://...)" class="sm:col-span-2 text-xs p-2.5 rounded-xl border border-cream-200">
+                        <input type="text" id="adminHeroTitle" placeholder="Título (ej: Nueva Colección)" class="text-xs p-2.5 rounded-xl border border-cream-200">
+                        <input type="text" id="adminHeroSubtitle" placeholder="Subtítulo/Promo" class="sm:col-span-2 text-xs p-2.5 rounded-xl border border-cream-200">
+                        <button type="submit" class="bg-rosegold hover:bg-rosegold-dark text-white font-extrabold text-xs uppercase tracking-wider rounded-xl py-2.5 transition-colors">
+                            + Agregar Banner
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Form Products -->
                 <div class="bg-cream-50 p-6 rounded-2xl border border-cream-200">
                     <h4 class="font-bold text-dark text-xs uppercase tracking-wider mb-4">Agregar / Editar Producto</h4>
                     <form onsubmit="handleSaveProduct(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -537,13 +578,126 @@
     <!-- LÓGICA JAVASCRIPT -->
     <script>
         // --- DATA & STATE ---
+        const defaultHeroBanners = [
+            {
+                image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=1600',
+                title: 'NUEVA COLECCIÓN DE TEMPORADA',
+                subtitle: 'Descubrí tonos vibrantes y texturas sedosas para potenciar tu estilo único.',
+                linkText: 'VER LANZAMIENTOS'
+            },
+            {
+                image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=1600',
+                title: 'ESPECIAL COSMÉTICA & SKINCARE',
+                subtitle: 'Aprovechá hasta 3 cuotas sin interés y envíos a todo el país.',
+                linkText: 'EXPLORAR TIENDA'
+            },
+            {
+                image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=1600',
+                title: 'MAKEUP PROFESIONAL',
+                subtitle: '10% OFF en todos los productos abonando por Transferencia Bancaria.',
+                linkText: 'VER OFERTAS'
+            }
+        ];
+
+        let heroBanners = JSON.parse(localStorage.getItem('camilu_hero_banners')) || defaultHeroBanners;
+        let currentHeroSlide = 0;
+        let heroTimer = null;
+
         const defaultProducts = [
-            { id: 'CM-001', name: 'Base Fluida Luminous', category: 'Rostro', price: 22000, oldPrice: 25000, stock: 15, images: ['https://images.unsplash.com/photo-1631214500115-598fc2cb8d2d?auto=format&fit=crop&q=80&w=500'], isOffer: true, description: 'Base de maquillaje con acabado luminoso y cobertura construible. Enriquecida con ácido hialurónico.' },
-            { id: 'CM-002', name: 'Labial Velvet Matte', category: 'Labios', price: 12500, oldPrice: null, stock: 20, images: ['https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&q=80&w=500'], isOffer: false, description: 'Labial líquido de acabado ultra mate. Larga duración sin resecar los labios.' },
-            { id: 'CM-003', name: 'Paleta Sombras Nude', category: 'Ojos', price: 35000, oldPrice: 40000, stock: 8, images: ['https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=500'], isOffer: true, description: '12 tonos neutros altamente pigmentados, perfectos para looks de día y noche.' },
-            { id: 'CM-004', name: 'Serum Vitamina C', category: 'Skincare', price: 28000, oldPrice: null, stock: 12, images: ['https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=500'], isOffer: false, description: 'Sérum antioxidante que ilumina y unifica el tono de la piel.' },
-            { id: 'CM-005', name: 'Rubor Líquido Glow', category: 'Rostro', price: 14000, oldPrice: null, stock: 25, images: ['https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=500'], isOffer: false, description: 'Rubor líquido con acabado jugoso y natural que se funde perfectamente.' },
-            { id: 'CM-006', name: 'Máscara Extra Volumen', category: 'Ojos', price: 16000, oldPrice: 19000, stock: 30, images: ['https://images.unsplash.com/photo-1599305090598-fe179d501227?auto=format&fit=crop&q=80&w=500'], isOffer: true, description: 'Volumen extremo y longitud en una sola pasada. Fórmula a prueba de agua.' }
+            { 
+                id: 'CM-001', 
+                name: 'Base Fluida Luminous', 
+                category: 'Rostro', 
+                price: 22000, 
+                oldPrice: 25000, 
+                stock: 15, 
+                images: ['https://images.unsplash.com/photo-1631214500115-598fc2cb8d2d?auto=format&fit=crop&q=80&w=600'], 
+                isOffer: true, 
+                shades: [
+                    { code: '01 Ivory', color: '#F7E7D5' },
+                    { code: '02 Nude', color: '#E8CAAF' },
+                    { code: '03 Beige', color: '#D4AF8C' },
+                    { code: '04 Warm', color: '#B88B68' }
+                ],
+                description: 'Base de maquillaje con acabado luminoso y cobertura construible. Enriquecida con ácido hialurónico.' 
+            },
+            { 
+                id: 'CM-002', 
+                name: 'Labial Velvet Matte', 
+                category: 'Labios', 
+                price: 12500, 
+                oldPrice: null, 
+                stock: 20, 
+                images: ['https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&q=80&w=600'], 
+                isOffer: false, 
+                shades: [
+                    { code: '101 Rose', color: '#C85A6E' },
+                    { code: '102 Ruby', color: '#901222' },
+                    { code: '103 Nude Gloss', color: '#B57563' },
+                    { code: '104 Plum', color: '#681B32' }
+                ],
+                description: 'Labial líquido de acabado ultra mate. Larga duración sin resecar los labios.' 
+            },
+            { 
+                id: 'CM-003', 
+                name: 'Paleta Sombras Nude', 
+                category: 'Ojos', 
+                price: 35000, 
+                oldPrice: 40000, 
+                stock: 8, 
+                images: ['https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=600'], 
+                isOffer: true, 
+                shades: [
+                    { code: 'Paleta Warm Nude', color: '#CFA383' },
+                    { code: 'Paleta Cool Glam', color: '#8F7166' }
+                ],
+                description: '12 tonos neutros altamente pigmentados, perfectos para looks de día y noche.' 
+            },
+            { 
+                id: 'CM-004', 
+                name: 'Serum Vitamina C', 
+                category: 'Skincare', 
+                price: 28000, 
+                oldPrice: null, 
+                stock: 12, 
+                images: ['https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=600'], 
+                isOffer: false, 
+                shades: [
+                    { code: 'Fórmula Única', color: '#F0B429' }
+                ],
+                description: 'Sérum antioxidante que ilumina y unifica el tono de la piel.' 
+            },
+            { 
+                id: 'CM-005', 
+                name: 'Rubor Líquido Glow', 
+                category: 'Rostro', 
+                price: 14000, 
+                oldPrice: null, 
+                stock: 25, 
+                images: ['https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&q=80&w=600'], 
+                isOffer: false, 
+                shades: [
+                    { code: '01 Peach Glow', color: '#F19072' },
+                    { code: '02 Berry Pop', color: '#B64B62' },
+                    { code: '03 Soft Coral', color: '#E87A5D' }
+                ],
+                description: 'Rubor líquido con acabado jugoso y natural que se funde perfectamente.' 
+            },
+            { 
+                id: 'CM-006', 
+                name: 'Máscara Extra Volumen', 
+                category: 'Ojos', 
+                price: 16000, 
+                oldPrice: 19000, 
+                stock: 30, 
+                images: ['https://images.unsplash.com/photo-1599305090598-fe179d501227?auto=format&fit=crop&q=80&w=600'], 
+                isOffer: true, 
+                shades: [
+                    { code: 'Black Intense', color: '#1A1A1A' },
+                    { code: 'Waterproof Black', color: '#000000' }
+                ],
+                description: 'Volumen extremo y longitud en una sola pasada. Fórmula a prueba de agua.' 
+            }
         ];
 
         let products = JSON.parse(localStorage.getItem('camilu_products')) || defaultProducts;
@@ -556,10 +710,152 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            renderHeroCarousel();
+            startHeroTimer();
             renderCarousel();
             renderGrid();
             updateCartBadge();
         });
+
+        // --- HERO CAROUSEL LOGIC ---
+        function renderHeroCarousel() {
+            const track = document.getElementById('heroSlidesTrack');
+            const dotsContainer = document.getElementById('heroDotsContainer');
+
+            if (!heroBanners || heroBanners.length === 0) {
+                track.innerHTML = '';
+                return;
+            }
+
+            track.innerHTML = heroBanners.map((slide, idx) => `
+                <div class="w-full h-full flex-shrink-0 relative">
+                    <img src="${slide.image}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-dark/90 via-dark/40 to-transparent flex items-center">
+                        <div class="px-8 sm:px-16 max-w-xl text-white">
+                            <span class="text-[9px] sm:text-[11px] font-extrabold uppercase tracking-[0.3em] text-rosegold block mb-2">CAMILÚ MAQUILLAJES</span>
+                            <h2 class="font-display text-2xl sm:text-4xl md:text-5xl font-extrabold uppercase tracking-tight leading-tight text-white mb-3">
+                                ${slide.title}
+                            </h2>
+                            <p class="text-xs sm:text-sm text-cream-100/90 font-medium leading-relaxed mb-6 hidden sm:block">
+                                ${slide.subtitle}
+                            </p>
+                            <button onclick="document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' })" class="px-6 py-3 bg-rosegold hover:bg-white hover:text-dark text-white font-extrabold text-[11px] uppercase tracking-widest rounded-full transition-all shadow-lg flex items-center gap-2">
+                                <span>${slide.linkText || 'EXPLORAR TIENDA'}</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            dotsContainer.innerHTML = heroBanners.map((_, idx) => `
+                <button onclick="goToHeroSlide(${idx})" class="h-2 rounded-full transition-all duration-300 ${idx === currentHeroSlide ? 'w-8 bg-rosegold' : 'w-2 bg-white/50 hover:bg-white'}"></button>
+            `).join('');
+
+            updateHeroTrackPosition();
+        }
+
+        function updateHeroTrackPosition() {
+            const track = document.getElementById('heroSlidesTrack');
+            track.style.transform = `translateX(-${currentHeroSlide * 100}%)`;
+            
+            const dots = document.querySelectorAll('#heroDotsContainer button');
+            dots.forEach((dot, idx) => {
+                if (idx === currentHeroSlide) {
+                    dot.className = 'h-2 rounded-full transition-all duration-300 w-8 bg-rosegold';
+                } else {
+                    dot.className = 'h-2 rounded-full transition-all duration-300 w-2 bg-white/50 hover:bg-white';
+                }
+            });
+        }
+
+        function nextHeroSlide() {
+            currentHeroSlide = (currentHeroSlide + 1) % heroBanners.length;
+            updateHeroTrackPosition();
+            resetHeroTimer();
+        }
+
+        function prevHeroSlide() {
+            currentHeroSlide = (currentHeroSlide - 1 + heroBanners.length) % heroBanners.length;
+            updateHeroTrackPosition();
+            resetHeroTimer();
+        }
+
+        function goToHeroSlide(idx) {
+            currentHeroSlide = idx;
+            updateHeroTrackPosition();
+            resetHeroTimer();
+        }
+
+        function startHeroTimer() {
+            heroTimer = setInterval(() => {
+                nextHeroSlide();
+            }, 5000);
+        }
+
+        function resetHeroTimer() {
+            clearInterval(heroTimer);
+            startHeroTimer();
+        }
+
+        function handleAddHeroBanner(e) {
+            e.preventDefault();
+            const img = document.getElementById('adminHeroImg').value;
+            const title = document.getElementById('adminHeroTitle').value || 'NUEVA PROMO';
+            const subtitle = document.getElementById('adminHeroSubtitle').value || 'Aprovechá nuestras novedades exclusivas.';
+
+            heroBanners.push({ image: img, title, subtitle, linkText: 'VER MÁS' });
+            localStorage.setItem('camilu_hero_banners', JSON.stringify(heroBanners));
+            
+            document.getElementById('adminHeroImg').value = '';
+            document.getElementById('adminHeroTitle').value = '';
+            document.getElementById('adminHeroSubtitle').value = '';
+            
+            renderHeroCarousel();
+            renderAdminHeroList();
+        }
+
+        function deleteHeroBanner(idx) {
+            if (heroBanners.length <= 1) {
+                alert('Debes mantener al menos 1 banner en el carrusel.');
+                return;
+            }
+            heroBanners.splice(idx, 1);
+            if (currentHeroSlide >= heroBanners.length) currentHeroSlide = 0;
+            localStorage.setItem('camilu_hero_banners', JSON.stringify(heroBanners));
+            renderHeroCarousel();
+            renderAdminHeroList();
+        }
+
+        function renderAdminHeroList() {
+            const list = document.getElementById('adminHeroList');
+            list.innerHTML = heroBanners.map((b, idx) => `
+                <div class="flex items-center justify-between p-2.5 bg-cream-50 rounded-xl border border-cream-200">
+                    <div class="flex items-center gap-3">
+                        <img src="${b.image}" class="w-12 h-8 object-cover rounded-md">
+                        <div>
+                            <p class="text-xs font-bold text-dark leading-none">${b.title}</p>
+                            <p class="text-[10px] text-neutral-400 truncate max-w-xs">${b.subtitle}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteHeroBanner(${idx})" class="text-neutral-400 hover:text-red-500 text-xs px-2"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        // --- ADMIN PANEL MODAL ---
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPassword').value;
+            if(pass === 'admin123') { // Simple demo auth
+                closeAdminAuthModal();
+                document.getElementById('adminPanelModal').classList.remove('hidden');
+                renderAdminHeroList();
+                renderProductsAdmin();
+            } else {
+                alert('Clave incorrecta');
+            }
+        }
 
         const formatMoney = (amount) => new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 0 }).format(amount);
 
@@ -615,30 +911,77 @@
                 grid.classList.remove('hidden');
                 emptyState.classList.add('hidden');
                 
-                grid.innerHTML = filtered.map(p => `
-                    <div class="bg-white rounded-3xl overflow-hidden border border-cream-200 group flex flex-col cursor-pointer hover:shadow-lg transition-shadow" onclick="openProductModal('${p.id}')">
-                        <div class="aspect-square relative overflow-hidden bg-cream-50">
-                            <img src="${p.images[0]}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                            ${p.isOffer ? `<span class="absolute top-3 left-3 bg-rosegold text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest badge-glow">SALE</span>` : ''}
-                        </div>
-                        <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between">
-                            <div>
-                                <span class="text-[9px] font-bold uppercase tracking-widest text-neutral-400">${p.category}</span>
-                                <h3 class="font-display font-extrabold text-sm sm:text-base uppercase text-dark mt-0.5 leading-tight">${p.name}</h3>
+                grid.innerHTML = filtered.map(p => {
+                    const shades = p.shades || [
+                        { code: '01 Tone', color: '#E2B49A' },
+                        { code: '02 Tone', color: '#C89379' }
+                    ];
+
+                    return `
+                    <div class="bg-white rounded-2xl overflow-hidden border border-cream-200 group flex flex-col cursor-pointer transition-all duration-300 hover:shadow-xl relative" onclick="openProductModal('${p.id}')">
+                        
+                        <!-- Image Container with Hover Zoom (Dapop Style) -->
+                        <div class="aspect-[4/5] relative overflow-hidden bg-cream-50">
+                            <img src="${p.images[0]}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            
+                            ${p.isOffer ? `<span class="absolute top-3 left-3 bg-rosegold text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest badge-glow">OFERTA</span>` : ''}
+
+                            <!-- QUICK SHADE SELECTOR OVERLAY ON HOVER (DAPOP ESTILO) -->
+                            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-dark/80 via-dark/40 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex flex-col justify-end" onclick="event.stopPropagation()">
+                                <span class="text-[9px] font-bold text-white uppercase tracking-widest mb-1.5 block text-center" id="shade-title-${p.id}">
+                                    TONOS (${shades.length})
+                                </span>
+                                <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                                    ${shades.map((shade, i) => `
+                                        <button 
+                                            title="${shade.code}" 
+                                            onmouseover="highlightShade('${p.id}', '${shade.code}')"
+                                            onclick="openProductModal('${p.id}')"
+                                            class="w-5 h-5 rounded-full border border-white/80 shadow-md transform hover:scale-125 transition-transform"
+                                            style="background-color: ${shade.color}">
+                                        </button>
+                                    `).join('')}
+                                </div>
                             </div>
-                            <div class="mt-3 flex items-center justify-between">
+                        </div>
+
+                        <!-- Info section -->
+                        <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between text-center sm:text-left">
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-[9px] font-extrabold uppercase tracking-widest text-rosegold">${p.category}</span>
+                                    <span class="text-[9px] font-mono text-neutral-400 font-bold">${p.id}</span>
+                                </div>
+                                <h3 class="font-display font-extrabold text-sm sm:text-base uppercase text-dark leading-tight group-hover:text-rosegold-dark transition-colors">
+                                    ${p.name}
+                                </h3>
+                                <p id="shade-label-${p.id}" class="text-[10px] text-neutral-400 font-semibold mt-1 truncate">
+                                    ${shades.length > 1 ? `${shades.length} Tonos disponibles` : shades[0]?.code || 'Tono Único'}
+                                </p>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-t border-cream-100 flex items-center justify-between">
                                 <div class="flex flex-col">
                                     <span class="text-base sm:text-lg font-black text-dark leading-none">${formatMoney(p.price)}</span>
                                     ${p.oldPrice ? `<span class="text-[10px] text-neutral-400 line-through mt-0.5">${formatMoney(p.oldPrice)}</span>` : ''}
                                 </div>
-                                <button class="w-8 h-8 rounded-full bg-cream-100 text-dark group-hover:bg-dark group-hover:text-white flex items-center justify-center transition-colors">
-                                    <i class="fa-solid fa-plus text-xs"></i>
+                                <button onclick="event.stopPropagation(); openProductModal('${p.id}')" class="px-3.5 py-1.5 bg-dark text-white rounded-full text-[10px] font-bold uppercase tracking-wider group-hover:bg-rosegold transition-colors flex items-center gap-1">
+                                    <span>Ver</span>
+                                    <i class="fa-solid fa-arrow-right text-[9px]"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
-                `).join('');
+                `;
+                }).join('');
             }
+        }
+
+        function highlightShade(productId, shadeCode) {
+            const label = document.getElementById(`shade-label-${productId}`);
+            const title = document.getElementById(`shade-title-${productId}`);
+            if (label) label.innerText = `Tono: ${shadeCode}`;
+            if (title) title.innerText = shadeCode;
         }
 
         // --- FILTERING & SEARCH ---
