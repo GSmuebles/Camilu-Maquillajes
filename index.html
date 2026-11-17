@@ -6,7 +6,7 @@
   <title>Camilú Maquillajes · Tienda Online</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
@@ -86,19 +86,19 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <h3 style="font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 8px;">Camilú Maquillajes</h3>
-          <p style="color: #d6c5cb; font-size: 0.9rem; max-width: 340px;" id="footerAbout">
+          <h3 style="font-family: var(--font-display); font-style: italic; font-size: 1.75rem; margin-bottom: 8px;">Camilú Maquillajes</h3>
+          <p style="color: #e6d7d1; font-size: 0.9rem; max-width: 340px;" id="footerAbout">
             Tu tienda de maquillaje y belleza. Consultanos por asesoramiento personalizado.
           </p>
         </div>
         <div>
-          <h4 style="margin-bottom: 8px;">Contacto</h4>
-          <p style="color: #d6c5cb; font-size: 0.9rem;" id="footerContact">Atención por WhatsApp</p>
+          <h4 style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 8px;">Contacto</h4>
+          <p style="color: #e6d7d1; font-size: 0.9rem;" id="footerContact">Atención por WhatsApp</p>
         </div>
       </div>
       <div class="footer-bottom">
         <span>© 2026 Camilú Maquillajes. Todos los derechos reservados.</span>
-        <a href="./admin.html" style="color: #d6c5cb;">Acceso administración</a>
+        <a href="./admin.html" style="color: #fdfaf7; font-weight: 600;">Acceso administración</a>
       </div>
     </div>
   </footer>
@@ -121,7 +121,7 @@
       <div class="cart-items" id="cartItemsList"></div>
       <div class="drawer-footer">
         <div class="shipping-bar" id="shippingBar">Agregá productos para calcular tu envío</div>
-        <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.1rem; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.1rem; margin-bottom:14px;">
           <span>Total estimado</span>
           <span id="cartTotal">$0</span>
         </div>
@@ -340,7 +340,7 @@
           </div>
           <div>
             <div class="product-brand">${p.brand_name || 'Camilú Maquillajes'}</div>
-            <h2 style="font-family: var(--font-display); font-size:1.5rem; margin-bottom:8px;">${p.name}</h2>
+            <h2 style="font-family: var(--font-display); font-size:1.85rem; margin-bottom:8px; color:var(--primary-dark);">${p.name}</h2>
             <div class="product-prices">
               <span class="price-final" style="font-size:1.45rem;">${formatARS(finalPrice)}</span>
               ${disc > 0 ? `<span class="price-old">${formatARS(basePrice)}</span>` : ''}
