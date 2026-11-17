@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Administración · Camilú Maquillajes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+
+  <!-- Vista Login -->
+  <div class="admin-login-wrap" id="loginView">
+    <div class="admin-card">
+      <h1 style="font-family: var(--font-display); color: var(--primary-dark); margin-bottom: 6px;">Camilú Admin</h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Ingresá con tu cuenta de administradora</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" required placeholder="tu-email@ejemplo.com" />
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Ingresar al panel</button>
+      </form>
+      <div style="margin-top:16px; text-align:center;">
+        <a href="./index.html" style="font-size:0.85rem; color:var(--primary);">← Volver a la tienda</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista Dashboard -->
+  <div id="dashboardView" style="display:none;">
+    <header class="header">
+      <div class="container header-inner">
+        <div class="brand-logo">Camilú <span>Panel Admin</span></div>
+        <div class="header-actions">
+          <a href="./index.html" target="_blank" class="btn btn-outline btn-sm">Ver tienda</a>
+          <button class="btn btn-sm" id="exportBackupBtn">Exportar backup</button>
+          <button class="btn btn-danger btn-sm" id="logoutBtn">Cerrar sesión</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="products">Productos y Fotos</button>
+        <button class="admin-tab" data-tab="categories">Categorías</button>
+        <button class="admin-tab" data-tab="brands">Marcas</button>
+        <button class="admin-tab" data-tab="discounts">Descuentos</button>
+        <button class="admin-tab" data-tab="banners">Banners</button>
+        <button class="admin-tab" data-tab="settings">Ajustes y WhatsApp</button>
+      </div>
+
+      <!-- TAB: PRODUCTOS -->
+      <section id="tab-products" class="tab-content">
+        <div class="admin-panel-box">
+          <h3 style="margin-bottom:14px;">Agregar Nuevo Producto</h3>
+          <form id="newProductForm">
+            <div class="grid-3">
+              <div class="form-group">
+                <label>Nombre del producto *</label>
+                <input type="text" id="pName" required placeholder="Ej: Labial Matte Velvet" />
+              </div>
+              <div class="form-group">
+                <label>Precio ARS *</label>
+                <input type="number" id="pPrice" required min="0" step="0.01" placeholder="8500" />
+              </div>
+              <div class="form-group">
+                <label>Stock inicial</label>
+                <input type="number" id="pStock" value="10" min="0" />
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="form-group">
+                <label>Categoría</label>
+                <select id="pCategory"></select>
+              </div>
+              <div class="form-group">
+                <label>Marca</label>
+                <select id="pBrand"></select>
+              </div>
+              <div class="form-group">
+                <label>Foto principal (JPG/PNG/WebP, máx 3MB)</label>
+                <input type="file" id="pImageFile" accept="image/webp,image/jpeg,image/png" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Descripción</label>
+              <textarea id="pDesc" rows="2" placeholder="Detalles, acabado, contenido..."></textarea>
+            </div>
+            <div style="display:flex; gap:18px; margin-bottom:14px; font-size:0.88rem;">
+              <label><input type="checkbox" id="pFeatured" /> Destacado</label>
+              <label><input type="checkbox" id="pNew" checked /> Novedad</label>
+              <label><input type="checkbox" id="pBest" /> Más vendido</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar producto</button>
+          </form>
+        </div>
+
+        <div class="admin-panel-box" style="overflow-x:auto;">
+          <h3 style="margin-bottom:12px;">Catálogo Actual</h3>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="adminProductsList"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB: CATEGORÍAS -->
+      <section id="tab-categories" class="tab-content" style="display:none;">
+        <div class="admin-panel-box">
+          <h3 style="margin-bottom:12px;">Nueva Categoría</h3>
+          <form id="newCategoryForm" style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="text" id="catName" required placeholder="Ej: Labiales, Rostro, Ojos..." style="flex:1; padding:10px; border:1px solid var(--border); border-radius:10px;" />
+            <button type="submit" class="btn btn-primary">Crear categoría</button>
+          </form>
+        </div>
+        <div class="admin-panel-box">
+          <table class="admin-table">
+            <thead><tr><th>ID</th><th>Nombre</th><th>Slug</th><th>Visible</th><th>Acciones</th></tr></thead>
+            <tbody id="adminCategoriesList"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB: MARCAS -->
+      <section id="tab-brands" class="tab-content" style="display:none;">
+        <div class="admin-panel-box">
+          <h3 style="margin-bottom:12px;">Nueva Marca</h3>
+          <form id="newBrandForm" style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="text" id="brandName" required placeholder="Ej: Dapop, Ruby Rose..." style="flex:1; padding:10px; border:1px solid var(--border); border-radius:10px;" />
+            <button type="submit" class="btn btn-primary">Crear marca</button>
+          </form>
+        </div>
+        <div class="admin-panel-box">
+          <table class="admin-table">
+            <thead><tr><th>ID</th><th>Nombre</th><th>Slug</th><th>Activa</th><th>Acciones</th></tr></thead>
+            <tbody id="adminBrandsList"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB: DESCUENTOS -->
+      <section id="tab-discounts" class="tab-content" style="display:none;">
+        <div class="admin-panel-box">
+          <h3 style="margin-bottom:12px;">Crear Descuento</h3>
+          <form id="newDiscountForm" class="grid-3">
+            <div class="form-group">
+              <label>Nombre promo</label>
+              <input type="text" id="dName" required placeholder="Ej: Hot Sale 20%" />
+            </div>
+            <div class="form-group">
+              <label>Porcentaje (%)</label>
+              <input type="number" id="dPercent" required min="1" max="99" placeholder="20" />
+            </div>
+            <div class="form-group">
+              <label>Aplicar a</label>
+              <select id="dScope">
+                <option value="all">Toda la tienda</option>
+                <option value="category">Una categoría</option>
+                <option value="brand">Una marca</option>
+              </select>
+            </div>
+            <div class="form-group" id="dTargetWrap" style="display:none;">
+              <label>Seleccionar destino</label>
+              <select id="dTargetId"></select>
+            </div>
+            <div style="grid-column: 1/-1;">
+              <button type="submit" class="btn btn-primary">Activar descuento</button>
+            </div>
+          </form>
+        </div>
+        <div class="admin-panel-box">
+          <table class="admin-table">
+            <thead><tr><th>Nombre</th><th>%</th><th>Alcance</th><th>Activo</th><th>Acciones</th></tr></thead>
+            <tbody id="adminDiscountsList"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB: BANNERS -->
+      <section id="tab-banners" class="tab-content" style="display:none;">
+        <div class="admin-panel-box">
+          <h3 style="margin-bottom:12px;">Nuevo Banner Principal</h3>
+          <form id="newBannerForm">
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Título principal</label>
+                <input type="text" id="bTitle" required placeholder="Nueva Colección" />
+              </div>
+              <div class="form-group">
+                <label>Subtítulo</label>
+                <input type="text" id="bSubtitle" placeholder="Envíos a todo el país" />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Texto botón</label>
+                <input type="text" id="bBtnText" value="Ver catálogo" />
+              </div>
+              <div class="form-group">
+                <label>Imagen del banner (máx 5MB)</label>
+                <input type="file" id="bImageFile" accept="image/webp,image/jpeg,image/png" />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Publicar banner</button>
+          </form>
+        </div>
+        <div class="admin-panel-box">
+          <table class="admin-table">
+            <thead><tr><th>Título</th><th>Subtítulo</th><th>Activo</th><th>Acciones</th></tr></thead>
+            <tbody id="adminBannersList"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB: AJUSTES -->
+      <section id="tab-settings" class="tab-content" style="display:none;">
+        <div class="admin-panel-box">
+          <h3 style="margin-bottom:14px;">Configuración de la Tienda</h3>
+          <form id="settingsForm">
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Número de WhatsApp (con código país, sin +)</label>
+                <input type="text" id="setWhatsapp" placeholder="5492657000000" />
+              </div>
+              <div class="form-group">
+                <label>Monto mínimo envío gratis (ARS, 0 para desactivar)</label>
+                <input type="number" id="setFreeShip" placeholder="45000" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Texto barra superior</label>
+              <input type="text" id="setTopBar" placeholder="Envíos a todo el país · Pagá por transferencia o efectivo" />
+            </div>
+            <div class="form-group">
+              <label>Descripción corta en el pie de página</label>
+              <input type="text" id="setFooterAbout" placeholder="Tu tienda de maquillaje en Villa Mercedes..." />
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar configuración</button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import { supabase, getPublicImageUrl, formatARS } from './js/supabase-client.js';
+
+    let categories = [];
+    let brands = [];
+
+    async function checkAuth() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        showLogin();
+        return;
+      }
+      const { data: isAdmin } = await supabase.rpc('is_admin');
+      if (!isAdmin) {
+        await supabase.auth.signOut();
+        alert('Tu usuario no figura en la tabla public.admins.');
+        showLogin();
+        return;
+      }
+      showDashboard();
+    }
+
+    function showLogin() {
+      document.getElementById('loginView').style.display = 'flex';
+      document.getElementById('dashboardView').style.display = 'none';
+    }
+
+    async function showDashboard() {
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('dashboardView').style.display = 'block';
+      await cleanupStorageQueue();
+      await loadAllData();
+    }
+
+    async function cleanupStorageQueue() {
+      const { data: pending } = await supabase
+        .from('storage_cleanup_queue')
+        .select('*')
+        .lt('attempts', 5);
+
+      for (const item of pending || []) {
+        const { error } = await supabase.storage.from(item.bucket).remove([item.path]);
+        if (!error) {
+          await supabase.from('storage_cleanup_queue').delete().eq('id', item.id);
+        } else {
+          await supabase.from('storage_cleanup_queue')
+            .update({ attempts: item.attempts + 1, last_error: error.message })
+            .eq('id', item.id);
+        }
+      }
+    }
+
+    async function loadAllData() {
+      const [catRes, brandRes, prodRes, discRes, banRes, setRes] = await Promise.all([
+        supabase.from('categories').select('*').order('sort_order'),
+        supabase.from('brands').select('*').order('name'),
+        supabase.from('products').select('*, product_images(storage_path, external_url, is_primary)').order('id', { ascending: false }),
+        supabase.from('discounts').select('*').order('id', { ascending: false }),
+        supabase.from('banners').select('*').order('sort_order'),
+        supabase.from('site_settings').select('*')
+      ]);
+
+      categories = catRes.data || [];
+      brands = brandRes.data || [];
+
+      // Selects del formulario de productos
+      document.getElementById('pCategory').innerHTML = `<option value="">Sin categoría</option>` +
+        categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      document.getElementById('pBrand').innerHTML = `<option value="">Sin marca</option>` +
+        brands.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+
+      // Render Productos
+      document.getElementById('adminProductsList').innerHTML = (prodRes.data || []).map(p => {
+        const img = p.product_images?.find(i => i.is_primary) || p.product_images?.[0];
+        const src = img?.storage_path ? getPublicImageUrl('product-images', img.storage_path) : (img?.external_url || 'https://placehold.co/60x60?text=Sin+Foto');
+        return `
+          <tr>
+            <td><img src="${src}" style="width:44px; height:44px; object-fit:cover; border-radius:8px;" /></td>
+            <td><strong>${p.name}</strong></td>
+            <td>${formatARS(p.price)}</td>
+            <td>${p.stock}</td>
+            <td>${p.is_active ? 'Activo' : 'Oculto'}</td>
+            <td style="display:flex; gap:6px;">
+              <button class="btn btn-outline btn-sm" onclick="toggleProduct(${p.id}, ${!p.is_active})">${p.is_active ? 'Ocultar' : 'Mostrar'}</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">Borrar</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Render Categorías
+      document.getElementById('adminCategoriesList').innerHTML = categories.map(c => `
+        <tr>
+          <td>${c.id}</td>
+          <td>${c.name}</td>
+          <td>${c.slug}</td>
+          <td>${c.is_visible ? 'Sí' : 'No'}</td>
+          <td><button class="btn btn-danger btn-sm" onclick="deleteRow('categories', ${c.id})">Borrar</button></td>
+        </tr>
+      `).join('');
+
+      // Render Marcas
+      document.getElementById('adminBrandsList').innerHTML = brands.map(b => `
+        <tr>
+          <td>${b.id}</td>
+          <td>${b.name}</td>
+          <td>${b.slug}</td>
+          <td>${b.is_active ? 'Sí' : 'No'}</td>
+          <td><button class="btn btn-danger btn-sm" onclick="deleteRow('brands', ${b.id})">Borrar</button></td>
+        </tr>
+      `).join('');
+
+      // Render Descuentos
+      document.getElementById('adminDiscountsList').innerHTML = (discRes.data || []).map(d => `
+        <tr>
+          <td>${d.name}</td>
+          <td>${d.percent}%</td>
+          <td>${d.scope}</td>
+          <td>${d.is_active ? 'Sí' : 'No'}</td>
+          <td><button class="btn btn-danger btn-sm" onclick="deleteRow('discounts', ${d.id})">Borrar</button></td>
+        </tr>
+      `).join('');
+
+      // Render Banners
+      document.getElementById('adminBannersList').innerHTML = (banRes.data || []).map(b => `
+        <tr>
+          <td>${b.title}</td>
+          <td>${b.subtitle || '-'}</td>
+          <td>${b.is_active ? 'Sí' : 'No'}</td>
+          <td><button class="btn btn-danger btn-sm" onclick="deleteRow('banners', ${b.id})">Borrar</button></td>
+        </tr>
+      `).join('');
+
+      // Cargar Settings
+      const settingsMap = {};
+      (setRes.data || []).forEach(s => settingsMap[s.key] = s.value);
+      document.getElementById('setWhatsapp').value = settingsMap.whatsapp_number || '';
+      document.getElementById('setFreeShip').value = settingsMap.free_shipping_min || '';
+      document.getElementById('setTopBar').value = settingsMap.top_bar_text || '';
+      document.getElementById('setFooterAbout').value = settingsMap.footer_about || '';
+    }
+
+    // Acciones globales en window
+    window.toggleProduct = async (id, newState) => {
+      await supabase.from('products').update({ is_active: newState }).eq('id', id);
+      loadAllData();
+    };
+
+    window.deleteProduct = async (id) => {
+      if (!confirm('¿Eliminar este producto y sus fotos?')) return;
+      await supabase.from('products').delete().eq('id', id);
+      await cleanupStorageQueue();
+      loadAllData();
+    };
+
+    window.deleteRow = async (table, id) => {
+      if (!confirm('¿Confirmar eliminación?')) return;
+      await supabase.from(table).delete().eq('id', id);
+      await cleanupStorageQueue();
+      loadAllData();
+    };
+
+    // Login & Logout
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return alert('Error de acceso: ' + error.message);
+      checkAuth();
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      showLogin();
+    });
+
+    // Tabs
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        tab.classList.add('active');
+        document.getElementById(`tab-${tab.dataset.tab}`).style.display = 'block';
+      });
+    });
+
+    // Nuevo Producto + Subida de imagen
+    document.getElementById('newProductForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('pName').value.trim(),
+        price: Number(document.getElementById('pPrice').value),
+        stock: Number(document.getElementById('pStock').value || 0),
+        category_id: document.getElementById('pCategory').value ? Number(document.getElementById('pCategory').value) : null,
+        brand_id: document.getElementById('pBrand').value ? Number(document.getElementById('pBrand').value) : null,
+        description: document.getElementById('pDesc').value.trim(),
+        is_featured: document.getElementById('pFeatured').checked,
+        is_new: document.getElementById('pNew').checked,
+        is_bestseller: document.getElementById('pBest').checked
+      };
+
+      const { data: prod, error } = await supabase.from('products').insert(payload).select().single();
+      if (error) return alert('Error al crear producto: ' + error.message);
+
+      const file = document.getElementById('pImageFile').files[0];
+      if (file) {
+        const ext = file.name.split('.').pop();
+        const path = `productos/${prod.id}-${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage.from('product-images').upload(path, file);
+        if (!upErr) {
+          await supabase.from('product_images').insert({
+            product_id: prod.id,
+            storage_path: path
+          });
+        } else {
+          alert('Producto creado, pero falló la subida de imagen: ' + upErr.message);
+        }
+      }
+
+      e.target.reset();
+      loadAllData();
+    });
+
+    // Nueva Categoría
+    document.getElementById('newCategoryForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = document.getElementById('catName').value.trim();
+      const { error } = await supabase.from('categories').insert({ name });
+      if (error) return alert(error.message);
+      e.target.reset();
+      loadAllData();
+    });
+
+    // Nueva Marca
+    document.getElementById('newBrandForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = document.getElementById('brandName').value.trim();
+      const { error } = await supabase.from('brands').insert({ name });
+      if (error) return alert(error.message);
+      e.target.reset();
+      loadAllData();
+    });
+
+    // Descuentos dinámicos
+    document.getElementById('dScope').addEventListener('change', e => {
+      const scope = e.target.value;
+      const wrap = document.getElementById('dTargetWrap');
+      const sel = document.getElementById('dTargetId');
+      if (scope === 'all') {
+        wrap.style.display = 'none';
+      } else if (scope === 'category') {
+        wrap.style.display = 'block';
+        sel.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+      } else if (scope === 'brand') {
+        wrap.style.display = 'block';
+        sel.innerHTML = brands.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+      }
+    });
+
+    document.getElementById('newDiscountForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const scope = document.getElementById('dScope').value;
+      const targetId = Number(document.getElementById('dTargetId').value);
+      const payload = {
+        name: document.getElementById('dName').value.trim(),
+        percent: Number(document.getElementById('dPercent').value),
+        scope,
+        category_id: scope === 'category' ? targetId : null,
+        brand_id: scope === 'brand' ? targetId : null
+      };
+      const { error } = await supabase.from('discounts').insert(payload);
+      if (error) return alert(error.message);
+      e.target.reset();
+      document.getElementById('dTargetWrap').style.display = 'none';
+      loadAllData();
+    });
+
+    // Nuevo Banner
+    document.getElementById('newBannerForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      let imagePath = null;
+      const file = document.getElementById('bImageFile').files[0];
+      if (file) {
+        const ext = file.name.split('.').pop();
+        imagePath = `banners/hero-${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage.from('site-images').upload(imagePath, file);
+        if (upErr) return alert('Error subiendo imagen: ' + upErr.message);
+      }
+      const { error } = await supabase.from('banners').insert({
+        title: document.getElementById('bTitle').value.trim(),
+        subtitle: document.getElementById('bSubtitle').value.trim(),
+        button_text: document.getElementById('bBtnText').value.trim(),
+        image_path: imagePath
+      });
+      if (error) return alert(error.message);
+      e.target.reset();
+      loadAllData();
+    });
+
+    // Guardar Settings
+    document.getElementById('settingsForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const rows = [
+        { key: 'whatsapp_number', value: document.getElementById('setWhatsapp').value.trim(), is_public: true },
+        { key: 'free_shipping_min', value: Number(document.getElementById('setFreeShip').value || 0), is_public: true },
+        { key: 'top_bar_text', value: document.getElementById('setTopBar').value.trim(), is_public: true },
+        { key: 'footer_about', value: document.getElementById('setFooterAbout').value.trim(), is_public: true }
+      ];
+      const { error } = await supabase.from('site_settings').upsert(rows);
+      if (error) return alert(error.message);
+      alert('Configuración guardada correctamente.');
+    });
+
+    // Exportar Backup JSON
+    document.getElementById('exportBackupBtn').addEventListener('click', async () => {
+      const { data, error } = await supabase.rpc('export_catalog');
+      if (error) return alert(error.message);
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `camilu-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+    });
+
+    checkAuth();
+  </script>
+</body>
+</html>
