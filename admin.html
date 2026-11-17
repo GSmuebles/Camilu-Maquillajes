@@ -47,7 +47,7 @@
 
     <main class="container">
       <div class="admin-tabs">
-        <button class="admin-tab active" data-tab="products">Productos y Fotos</button>
+        <button class="admin-tab active" data-tab="products">Productos, Tonos y Fotos</button>
         <button class="admin-tab" data-tab="categories">Categorías</button>
         <button class="admin-tab" data-tab="brands">Marcas</button>
         <button class="admin-tab" data-tab="discounts">Descuentos</button>
@@ -66,11 +66,11 @@
                 <input type="text" id="pName" required placeholder="Ej: Labial Matte Velvet" />
               </div>
               <div class="form-group">
-                <label>Precio ARS *</label>
+                <label>Precio base ARS *</label>
                 <input type="number" id="pPrice" required min="0" step="0.01" placeholder="8500" />
               </div>
               <div class="form-group">
-                <label>Stock inicial</label>
+                <label>Stock base (si no usa tonos)</label>
                 <input type="number" id="pStock" value="10" min="0" />
               </div>
             </div>
@@ -92,7 +92,7 @@
               <label>Descripción</label>
               <textarea id="pDesc" rows="2" placeholder="Detalles, acabado, contenido..."></textarea>
             </div>
-            <div style="display:flex; gap:18px; margin-bottom:14px; font-size:0.88rem;">
+            <div style="display:flex; gap:18px; margin-bottom:14px; font-size:0.88rem; flex-wrap:wrap;">
               <label><input type="checkbox" id="pFeatured" /> Destacado</label>
               <label><input type="checkbox" id="pNew" checked /> Novedad</label>
               <label><input type="checkbox" id="pBest" /> Más vendido</label>
@@ -109,7 +109,7 @@
                 <th>Foto</th>
                 <th>Nombre</th>
                 <th>Precio</th>
-                <th>Stock</th>
+                <th>Stock / Tonos</th>
                 <th>Estado</th>
                 <th>Acciones</th>
               </tr>
@@ -257,11 +257,80 @@
     </main>
   </div>
 
+  <!-- MODAL GESTIÓN DE VARIANTES Y FOTOS DE UN PRODUCTO -->
+  <div class="backdrop" id="manageProductModal">
+    <div class="modal" style="max-width: 820px;">
+      <button class="modal-close" id="closeManageModal">×</button>
+      <h2 id="manageModalTitle" style="font-family:var(--font-display); color:var(--primary-dark); margin-bottom:6px;">Gestionar Producto</h2>
+      <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:18px;">Agregá fotos adicionales, elegí la portada y cargá los tonos o variantes disponibles.</p>
+
+      <!-- Sección Galería de Fotos -->
+      <div style="background:var(--surface-soft); padding:16px; border-radius:14px; margin-bottom:20px;">
+        <h4 style="margin-bottom:10px;">Galería de Fotos</h4>
+        <form id="addPhotoForm" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+          <input type="file" id="extraPhotoFile" accept="image/webp,image/jpeg,image/png" required style="flex:1; background:#fff; padding:8px; border-radius:10px; border:1px solid var(--border);" />
+          <button type="submit" class="btn btn-primary btn-sm">Subir foto</button>
+        </form>
+        <div class="grid-4" id="modalPhotosList"></div>
+      </div>
+
+      <!-- Sección Tonos / Variantes -->
+      <div>
+        <h4 style="margin-bottom:10px;">Tonos / Variantes del Producto</h4>
+        <form id="addVariantForm" style="background:#fafafa; border:1px solid var(--border); padding:14px; border-radius:14px; margin-bottom:14px;">
+          <div class="grid-4">
+            <div class="form-group" style="margin:0;">
+              <label>Nombre tono/opción *</label>
+              <input type="text" id="vName" required placeholder="Ej: Tono 01 Nude" />
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Color (opcional)</label>
+              <input type="color" id="vColor" value="#d97b84" style="height:40px; padding:4px;" />
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Stock *</label>
+              <input type="number" id="vStock" value="5" min="0" required />
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Precio distinto (opcional)</label>
+              <input type="number" id="vPriceOverride" min="0" step="0.01" placeholder="Igual al base" />
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-end; margin-top:10px; flex-wrap:wrap;">
+            <div class="form-group" style="margin:0; flex:1; min-width:200px;">
+              <label>Foto asociada al tono (opcional)</label>
+              <select id="vImageSelect">
+                <option value="">Usar foto principal</option>
+              </select>
+            </div>
+            <label style="font-size:0.84rem; display:flex; align-items:center; gap:5px; padding-bottom:8px;">
+              <input type="checkbox" id="vUseColor" checked /> Mostrar círculo de color
+            </label>
+            <button type="submit" class="btn btn-primary btn-sm">Agregar tono</button>
+          </div>
+        </form>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Tono / Opción</th>
+              <th>Stock</th>
+              <th>Precio</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="modalVariantsList"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { supabase, getPublicImageUrl, formatARS } from './js/supabase-client.js';
 
     let categories = [];
     let brands = [];
+    let currentManageProductId = null;
 
     async function checkAuth() {
       const { data: { session } } = await supabase.auth.getSession();
@@ -313,7 +382,7 @@
       const [catRes, brandRes, prodRes, discRes, banRes, setRes] = await Promise.all([
         supabase.from('categories').select('*').order('sort_order'),
         supabase.from('brands').select('*').order('name'),
-        supabase.from('products').select('*, product_images(storage_path, external_url, is_primary)').order('id', { ascending: false }),
+        supabase.from('products').select('*, product_images(storage_path, external_url, is_primary), product_variants(id, name, stock)').order('id', { ascending: false }),
         supabase.from('discounts').select('*').order('id', { ascending: false }),
         supabase.from('banners').select('*').order('sort_order'),
         supabase.from('site_settings').select('*')
@@ -322,24 +391,28 @@
       categories = catRes.data || [];
       brands = brandRes.data || [];
 
-      // Selects del formulario de productos
       document.getElementById('pCategory').innerHTML = `<option value="">Sin categoría</option>` +
         categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
       document.getElementById('pBrand').innerHTML = `<option value="">Sin marca</option>` +
         brands.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
 
-      // Render Productos
       document.getElementById('adminProductsList').innerHTML = (prodRes.data || []).map(p => {
         const img = p.product_images?.find(i => i.is_primary) || p.product_images?.[0];
         const src = img?.storage_path ? getPublicImageUrl('product-images', img.storage_path) : (img?.external_url || 'https://placehold.co/60x60?text=Sin+Foto');
+        const varCount = p.product_variants?.length || 0;
+        const stockInfo = varCount > 0
+          ? `${varCount} tono(s) · ${p.product_variants.reduce((a, v) => a + v.stock, 0)} unid.`
+          : `${p.stock} unid.`;
+
         return `
           <tr>
             <td><img src="${src}" style="width:44px; height:44px; object-fit:cover; border-radius:8px;" /></td>
             <td><strong>${p.name}</strong></td>
             <td>${formatARS(p.price)}</td>
-            <td>${p.stock}</td>
+            <td>${stockInfo}</td>
             <td>${p.is_active ? 'Activo' : 'Oculto'}</td>
-            <td style="display:flex; gap:6px;">
+            <td style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button class="btn btn-primary btn-sm" onclick="openManageModal(${p.id}, '${p.name.replace(/'/g, "\'")}')">Tonos y Fotos</button>
               <button class="btn btn-outline btn-sm" onclick="toggleProduct(${p.id}, ${!p.is_active})">${p.is_active ? 'Ocultar' : 'Mostrar'}</button>
               <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">Borrar</button>
             </td>
@@ -347,7 +420,6 @@
         `;
       }).join('');
 
-      // Render Categorías
       document.getElementById('adminCategoriesList').innerHTML = categories.map(c => `
         <tr>
           <td>${c.id}</td>
@@ -358,7 +430,6 @@
         </tr>
       `).join('');
 
-      // Render Marcas
       document.getElementById('adminBrandsList').innerHTML = brands.map(b => `
         <tr>
           <td>${b.id}</td>
@@ -369,7 +440,6 @@
         </tr>
       `).join('');
 
-      // Render Descuentos
       document.getElementById('adminDiscountsList').innerHTML = (discRes.data || []).map(d => `
         <tr>
           <td>${d.name}</td>
@@ -380,7 +450,6 @@
         </tr>
       `).join('');
 
-      // Render Banners
       document.getElementById('adminBannersList').innerHTML = (banRes.data || []).map(b => `
         <tr>
           <td>${b.title}</td>
@@ -390,7 +459,6 @@
         </tr>
       `).join('');
 
-      // Cargar Settings
       const settingsMap = {};
       (setRes.data || []).forEach(s => settingsMap[s.key] = s.value);
       document.getElementById('setWhatsapp').value = settingsMap.whatsapp_number || '';
@@ -399,7 +467,137 @@
       document.getElementById('setFooterAbout').value = settingsMap.footer_about || '';
     }
 
-    // Acciones globales en window
+    // Gestión de Modal de Tonos y Fotos
+    window.openManageModal = async (productId, productName) => {
+      currentManageProductId = productId;
+      document.getElementById('manageModalTitle').textContent = `Tonos y Fotos · ${productName}`;
+      await refreshManageModalData();
+      document.getElementById('manageProductModal').classList.add('open');
+    };
+
+    async function refreshManageModalData() {
+      if (!currentManageProductId) return;
+      const [imgRes, varRes] = await Promise.all([
+        supabase.from('product_images').select('*').eq('product_id', currentManageProductId).order('is_primary', { ascending: false }).order('sort_order').order('id'),
+        supabase.from('product_variants').select('*').eq('product_id', currentManageProductId).order('sort_order').order('id')
+      ]);
+
+      const images = imgRes.data || [];
+      const variants = varRes.data || [];
+
+      // Select de fotos para vincular a una variante
+      document.getElementById('vImageSelect').innerHTML = `<option value="">Usar foto principal</option>` +
+        images.map((img, idx) => `<option value="${img.id}">Foto #${idx + 1} ${img.is_primary ? '(Portada)' : ''}</option>`).join('');
+
+      // Galería de fotos
+      document.getElementById('modalPhotosList').innerHTML = images.length ? images.map(img => {
+        const url = img.storage_path ? getPublicImageUrl('product-images', img.storage_path) : img.external_url;
+        return `
+          <div class="photo-thumb-card">
+            <img src="${url}" />
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              ${img.is_primary
+                ? `<span style="font-size:0.75rem; font-weight:700; color:var(--primary);">★ Portada</span>`
+                : `<button class="btn btn-outline btn-sm" onclick="makePrimaryPhoto(${img.id})">Hacer portada</button>`}
+              <button class="btn btn-danger btn-sm" onclick="deletePhoto(${img.id})">Eliminar</button>
+            </div>
+          </div>
+        `;
+      }).join('') : `<p style="color:var(--text-muted); font-size:0.85rem;">Este producto aún no tiene fotos.</p>`;
+
+      // Lista de variantes
+      document.getElementById('modalVariantsList').innerHTML = variants.length ? variants.map(v => `
+        <tr>
+          <td>
+            ${v.color_hex ? `<span class="swatch-dot" style="background:${v.color_hex}; vertical-align:middle; margin-right:6px;"></span>` : ''}
+            <strong>${v.name}</strong>
+          </td>
+          <td>
+            <input type="number" value="${v.stock}" min="0" style="width:72px; padding:4px 8px; border:1px solid var(--border); border-radius:6px;"
+              onchange="updateVariantStock(${v.id}, this.value)" />
+          </td>
+          <td>${v.price_override !== null ? formatARS(v.price_override) : 'Precio base'}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" onclick="deleteVariant(${v.id})">Borrar</button>
+          </td>
+        </tr>
+      `).join('') : `<tr><td colspan="4" style="color:var(--text-muted); text-align:center;">Sin tonos cargados (se vende como producto único).</td></tr>`;
+    }
+
+    document.getElementById('closeManageModal').addEventListener('click', () => {
+      document.getElementById('manageProductModal').classList.remove('open');
+      loadAllData();
+    });
+
+    document.getElementById('addPhotoForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const file = document.getElementById('extraPhotoFile').files[0];
+      if (!file || !currentManageProductId) return;
+      const ext = file.name.split('.').pop();
+      const path = `productos/${currentManageProductId}-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from('product-images').upload(path, file);
+      if (upErr) return alert('Error subiendo foto: ' + upErr.message);
+
+      const { error: dbErr } = await supabase.from('product_images').insert({
+        product_id: currentManageProductId,
+        storage_path: path
+      });
+      if (dbErr) return alert(dbErr.message);
+      e.target.reset();
+      await refreshManageModalData();
+    });
+
+    window.makePrimaryPhoto = async (imageId) => {
+      const { error } = await supabase.rpc('set_primary_image', { p_image_id: imageId });
+      if (error) return alert(error.message);
+      await refreshManageModalData();
+    };
+
+    window.deletePhoto = async (imageId) => {
+      if (!confirm('¿Eliminar esta foto?')) return;
+      await supabase.from('product_images').delete().eq('id', imageId);
+      await cleanupStorageQueue();
+      await refreshManageModalData();
+    };
+
+    document.getElementById('addVariantForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!currentManageProductId) return;
+      const useColor = document.getElementById('vUseColor').checked;
+      const priceVal = document.getElementById('vPriceOverride').value;
+      const imgVal = document.getElementById('vImageSelect').value;
+
+      const payload = {
+        product_id: currentManageProductId,
+        name: document.getElementById('vName').value.trim(),
+        color_hex: useColor ? document.getElementById('vColor').value : null,
+        stock: Number(document.getElementById('vStock').value || 0),
+        price_override: priceVal !== '' ? Number(priceVal) : null,
+        image_id: imgVal !== '' ? Number(imgVal) : null
+      };
+
+      const { error } = await supabase.from('product_variants').insert(payload);
+      if (error) return alert('Error al agregar tono: ' + error.message);
+      e.target.reset();
+      document.getElementById('vUseColor').checked = true;
+      await refreshManageModalData();
+    });
+
+    window.updateVariantStock = async (variantId, newStock) => {
+      const { error } = await supabase
+        .from('product_variants')
+        .update({ stock: Math.max(0, Number(newStock)) })
+        .eq('id', variantId);
+      if (error) alert(error.message);
+    };
+
+    window.deleteVariant = async (variantId) => {
+      if (!confirm('¿Eliminar este tono?')) return;
+      await supabase.from('product_variants').delete().eq('id', variantId);
+      await refreshManageModalData();
+    };
+
+    // Acciones generales
     window.toggleProduct = async (id, newState) => {
       await supabase.from('products').update({ is_active: newState }).eq('id', id);
       loadAllData();
@@ -444,7 +642,7 @@
       });
     });
 
-    // Nuevo Producto + Subida de imagen
+    // Nuevo Producto
     document.getElementById('newProductForm').addEventListener('submit', async e => {
       e.preventDefault();
       const payload = {
@@ -501,7 +699,7 @@
       loadAllData();
     });
 
-    // Descuentos dinámicos
+    // Descuentos
     document.getElementById('dScope').addEventListener('change', e => {
       const scope = e.target.value;
       const wrap = document.getElementById('dTargetWrap');

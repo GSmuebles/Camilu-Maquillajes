@@ -39,7 +39,6 @@
   </header>
 
   <main class="container">
-    <!-- Hero Banners -->
     <section class="hero" id="heroSection">
       <div class="hero-slide active">
         <div class="hero-content">
@@ -50,7 +49,6 @@
       </div>
     </section>
 
-    <!-- Categorías -->
     <section id="catalogo">
       <div class="categories-bar" id="categoriesBar">
         <button class="cat-pill active" data-category="all">Todos los productos</button>
@@ -469,7 +467,6 @@
       });
     }
 
-    // Event Listeners UI
     document.getElementById('searchInput').addEventListener('input', e => {
       state.filters.search = e.target.value;
       renderProducts();
@@ -510,7 +507,8 @@
       const total = state.cart.reduce((acc, i) => acc + i.price * i.qty, 0);
       lines.push('', `*Total: ${formatARS(total)}*`);
 
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`;
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(lines.join('
+'))}`;
       window.open(url, '_blank');
     });
 
