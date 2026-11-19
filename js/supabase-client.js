@@ -12,14 +12,14 @@ export function getPublicImageUrl(bucket, path) {
 }
 
 export function resolveProductImage(item) {
-  if (!item) return 'https://placehold.co/600x600/f6ece6/5c3a32?text=Camilu+Maquillajes';
+  if (!item) return 'https://placehold.co/600x600/fdf2f4/8a2846?text=Camilu+Maquillajes';
   if (item.image_thumb_path) return getPublicImageUrl('product-images', item.image_thumb_path);
   if (item.image_path) return getPublicImageUrl('product-images', item.image_path);
   if (item.storage_path) return getPublicImageUrl('product-images', item.storage_path);
   if (item.thumb_path) return getPublicImageUrl('product-images', item.thumb_path);
   if (item.image_external_url) return item.image_external_url;
   if (item.external_url) return item.external_url;
-  return 'https://placehold.co/600x600/f6ece6/5c3a32?text=Camilu+Maquillajes';
+  return 'https://placehold.co/600x600/fdf2f4/8a2846?text=Camilu+Maquillajes';
 }
 
 export function resolveSiteImage(item, mobile = false) {
