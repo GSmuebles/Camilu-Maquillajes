@@ -8,6 +8,153 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/styles.css" />
+  <style>
+    /* Respaldo visual para categorías y tarjetas de producto */
+    .categories-circles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .cat-pill-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 12px;
+      background: #fff;
+      border: 1px solid rgba(139, 46, 77, 0.14);
+      border-radius: 18px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--text-main, #2b1d22);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .cat-pill-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--pink-deep, #8b2e4d);
+      box-shadow: 0 8px 20px rgba(139, 46, 77, 0.08);
+    }
+    .cat-pill-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #f9dce4;
+      color: #8b2e4d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .cat-pill-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+    .product-card {
+      background: #fff;
+      border: 1px solid rgba(139, 46, 77, 0.12);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+    }
+    .product-thumb-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #fdf4f7;
+      overflow: hidden;
+    }
+    .product-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .product-discount-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #8b2e4d;
+      color: #fff;
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 999px;
+      z-index: 2;
+    }
+    .product-fav-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(139, 46, 77, 0.18);
+      background: rgba(255, 255, 255, 0.92);
+      color: #8b2e4d;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .product-card-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      justify-content: space-between;
+    }
+    .product-card-cat {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #8c6d78;
+      font-weight: 600;
+    }
+    .product-card-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin: 0;
+      color: #2b1d22;
+      line-height: 1.3;
+    }
+    .product-card-prices {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin: 4px 0 8px;
+    }
+    .product-card-price {
+      font-weight: 700;
+      color: #8b2e4d;
+      font-size: 1.05rem;
+    }
+    .product-card-old {
+      font-size: 0.84rem;
+      color: #9c868e;
+      text-decoration: line-through;
+    }
+  </style>
 </head>
 <body>
 
@@ -731,21 +878,23 @@
 
       return `
         <article class="product-card" data-product-id="${product.id}">
-          <div class="product-img-wrap">
-            ${badgeText ? `<span class="product-badge">${badgeText}</span>` : ''}
-            <button type="button" class="fav-btn ${isFav ? 'active' : ''}" data-fav-id="${product.id}" aria-label="Guardar en favoritos">
+          <div class="product-thumb-box">
+            ${badgeText ? `<span class="product-discount-tag">${badgeText}</span>` : ''}
+            <button type="button" class="product-fav-btn ${isFav ? 'active' : ''}" data-fav-id="${product.id}" aria-label="Guardar en favoritos">
               ${isFav ? '♥' : '♡'}
             </button>
             <img src="${imgUrl}" alt="${product.name}" loading="lazy" />
           </div>
-          <div class="product-info">
-            <div class="product-cat">${product.category_name || 'Belleza'}</div>
-            <h3 class="product-name">${product.name}</h3>
-            <div class="product-price-row">
-              <span class="product-price">${priceLabel}</span>
-              ${hasOld ? `<span class="product-old-price">${formatARS(product.old_price)}</span>` : ''}
+          <div class="product-card-body">
+            <div>
+              <div class="product-card-cat">${product.category_name || 'Belleza'}</div>
+              <h3 class="product-card-title">${product.name}</h3>
             </div>
-            <div class="product-actions">
+            <div>
+              <div class="product-card-prices">
+                <span class="product-card-price">${priceLabel}</span>
+                ${hasOld ? `<span class="product-card-old">${formatARS(product.old_price)}</span>` : ''}
+              </div>
               <button type="button" class="btn btn-beauty btn-sm" style="width:100%;" data-open-detail="${product.id}">Ver detalle</button>
             </div>
           </div>
@@ -779,15 +928,14 @@
       const catGrid = document.getElementById('homeCategoriesGrid');
       if (catGrid) {
         catGrid.innerHTML = state.categories.map(cat => {
-          const catImg = cat.image_path
-            ? getPublicImageUrl('site-images', cat.image_path)
-            : 'https://placehold.co/120x120/f9dce4/8b2e4d?text=Cat';
+          const catImg = cat.image_path ? getPublicImageUrl('site-images', cat.image_path) : '';
+          const initial = (cat.name || 'C').trim().charAt(0).toUpperCase();
           return `
-            <button type="button" class="category-circle-card" data-filter-cat="${cat.id}">
-              <div class="category-circle-img">
-                <img src="${catImg}" alt="${cat.name}" loading="lazy" />
+            <button type="button" class="cat-pill-card" data-filter-cat="${cat.id}">
+              <div class="cat-pill-avatar">
+                ${catImg ? `<img src="${catImg}" alt="${cat.name}" loading="lazy" />` : initial}
               </div>
-              <span class="category-circle-name">${cat.name}</span>
+              <span>${cat.name}</span>
             </button>
           `;
         }).join('');
@@ -902,12 +1050,12 @@
       if (container) {
         container.innerHTML = `
           <div class="detail-gallery">
-            <img src="${mainImg}" alt="${product.name}" id="detailMainImg" class="detail-main-img" />
+            <img src="${mainImg}" alt="${product.name}" id="detailMainImg" class="detail-main-img" style="max-width:100%;border-radius:16px;object-fit:cover;" />
           </div>
           <div class="detail-info">
-            <div class="product-cat">${product.category_name || 'Belleza'}${product.brand_name ? ` · ${product.brand_name}` : ''}</div>
+            <div class="product-card-cat">${product.category_name || 'Belleza'}${product.brand_name ? ` · ${product.brand_name}` : ''}</div>
             <h1 style="font-family:var(--font-display); font-size:2.1rem; color:var(--pink-deep); margin:6px 0 10px;">${product.name}</h1>
-            <div class="product-price" style="font-size:1.5rem; margin:10px 0;">${formatARS(product.final_price)}</div>
+            <div class="product-card-price" style="font-size:1.5rem; margin:10px 0;">${formatARS(product.final_price)}</div>
             <p style="color:var(--text-muted); margin-bottom:16px;">${product.description || 'Producto seleccionado de Camilú Maquillajes.'}</p>
 
             ${variants.length ? `
