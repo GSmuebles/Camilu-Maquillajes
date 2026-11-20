@@ -708,7 +708,7 @@
 
                 <h4 style="font-family:var(--font-display); font-size:1.35rem; color:var(--pink-deep); margin:18px 0 10px;">Mercado Pago / Tarjeta</h4>
                 <div class="form-field">
-                  <label>Enlace de pago / checkout (https://...)</label>
+                  <label>Enlace de pago / checkout de respaldo (https://...)</label>
                   <input type="url" id="cfgMpLink" placeholder="https://link.mercadopago.com.ar/..." />
                 </div>
 
@@ -1145,16 +1145,13 @@
         `;
         if (confirmBtn) confirmBtn.textContent = 'Confirmar pedido con depósito / transferencia';
       } else {
-        const mpLink = state.settings.mercadopago_link || '';
         box.innerHTML = `
           <div style="font-weight:700; color:var(--pink-deep); margin-bottom:6px;">Pago online con Mercado Pago / Tarjeta:</div>
           <p style="color:var(--text-muted); margin:0;">
-            ${mpLink
-              ? 'Al confirmar tu pedido se abrirá el checkout seguro de Mercado Pago para abonar con tarjeta de crédito, débito o dinero en cuenta.'
-              : 'Aboná con tarjetas de crédito, débito o saldo en Mercado Pago al confirmar tu compra.'}
+            Al confirmar tu pedido se generará el enlace con el monto exacto de tu compra y te redirigiremos a Mercado Pago.
           </p>
         `;
-        if (confirmBtn) confirmBtn.textContent = mpLink ? 'Confirmar e ir a pagar con Mercado Pago' : 'Confirmar pedido con Mercado Pago / Tarjeta';
+        if (confirmBtn) confirmBtn.textContent = 'Confirmar e ir a pagar con Mercado Pago';
       }
     }
 
@@ -1584,8 +1581,9 @@
       renderFavoritesPage();
     });
 
-    document.getElementById('confirmCheckoutBtn')?.addEventListener('click', () => {
+    document.getElementById('confirmCheckoutBtn')?.addEventListener('click', async () => {
       if (!state.cart.length) return alert('Tu carrito está vacío.');
+
       const customerName = document.getElementById('checkoutCustomerName')?.value.trim();
       const customerContact = document.getElementById('checkoutCustomerContact')?.value.trim();
       if (!customerName || !customerContact) {
@@ -1598,36 +1596,73 @@
       const discount = payment === 'deposito' ? Math.round(subtotal * 0.1) : 0;
       const total = Math.max(0, subtotal - discount);
       const orderCode = 'CM-' + Date.now().toString().slice(-6);
+      const cartSnapshot = [...state.cart];
 
-      const resultBox = document.getElementById('checkoutResultBox');
-      if (resultBox) {
-        resultBox.style.display = 'block';
-        if (payment === 'deposito') {
+      if (payment === 'deposito') {
+        const resultBox = document.getElementById('checkoutResultBox');
+        if (resultBox) {
+          resultBox.style.display = 'block';
           resultBox.innerHTML = `
             <strong>¡Pedido ${orderCode} registrado!</strong><br>
             Cliente: ${customerName} (${customerContact})<br>
             Entrega: ${delivery} · Total: <strong>${formatARS(total)}</strong><br>
             Realizá el depósito o transferencia por <strong>${formatARS(total)}</strong> al Alias <strong>${state.settings.bank_alias || '-'}</strong> (CBU/CVU: ${state.settings.bank_cbu || '-'}) indicando el código <strong>${orderCode}</strong> en la referencia.
           `;
-        } else {
-          const mpLink = state.settings.mercadopago_link || '';
-          resultBox.innerHTML = `
-            <strong>¡Pedido ${orderCode} listo para abonar!</strong><br>
-            Cliente: ${customerName} (${customerContact})<br>
-            Entrega: ${delivery} · Total: <strong>${formatARS(total)}</strong><br>
-            ${mpLink
-              ? `Si no se abrió automáticamente, <a href="${mpLink}" target="_blank" rel="noopener noreferrer" style="font-weight:700; text-decoration:underline;">hacé clic acá para pagar con Mercado Pago / Tarjeta</a>.`
-              : 'Medio seleccionado: Mercado Pago / Tarjeta.'}
-          `;
-          if (mpLink) {
-            window.open(mpLink, '_blank', 'noopener,noreferrer');
-          }
         }
+        state.cart = [];
+        persistCart();
+        renderCartPage();
+        return;
       }
 
-      state.cart = [];
-      persistCart();
-      renderCartPage();
+      // Pago con Mercado Pago / Tarjeta -> preferencia dinámica con monto exacto
+      const confirmBtn = document.getElementById('confirmCheckoutBtn');
+      const originalBtnText = confirmBtn ? confirmBtn.textContent : '';
+      if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Generando link de pago...';
+      }
+
+      try {
+        const { data, error } = await supabase.functions.invoke('create-mp-preference', {
+          body: {
+            orderCode,
+            customerName,
+            customerContact,
+            deliveryMethod: delivery,
+            paymentMethod: payment,
+            discountPercent: 0,
+            items: cartSnapshot,
+            returnUrl: window.location.href.split('#')[0]
+          }
+        });
+
+        if (error || !data?.init_point) {
+          throw new Error(error?.message || data?.error || 'No se recibió init_point');
+        }
+
+        state.cart = [];
+        persistCart();
+        renderCartPage();
+
+        window.location.href = data.init_point;
+      } catch (err) {
+        console.error('Error Mercado Pago:', err);
+        const fallbackLink = (state.settings.mercadopago_link || '').trim();
+        if (fallbackLink) {
+          state.cart = [];
+          persistCart();
+          renderCartPage();
+          window.location.href = fallbackLink;
+          return;
+        }
+        alert('No se pudo generar el link de pago en este momento. Revisá la configuración de Mercado Pago.');
+      } finally {
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = originalBtnText || 'Confirmar pedido';
+        }
+      }
     });
 
     document.getElementById('adminLoginForm')?.addEventListener('submit', async (e) => {
