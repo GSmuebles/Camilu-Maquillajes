@@ -86,8 +86,15 @@
         <div class="benefit-card">
           <div class="benefit-icon">💳</div>
           <div>
-            <div class="benefit-title">3 cuotas sin interés</div>
-            <div class="benefit-sub">Tarjetas habilitadas</div>
+            <div class="benefit-title">Mercado Pago y Tarjetas</div>
+            <div class="benefit-sub">Pagá online en cuotas</div>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🏦</div>
+          <div>
+            <div class="benefit-title">Depósito / Transferencia</div>
+            <div class="benefit-sub">10% OFF abonando directo</div>
           </div>
         </div>
         <div class="benefit-card">
@@ -95,13 +102,6 @@
           <div>
             <div class="benefit-title">Compra segura</div>
             <div class="benefit-sub">Atención personalizada</div>
-          </div>
-        </div>
-        <div class="benefit-card">
-          <div class="benefit-icon">💬</div>
-          <div>
-            <div class="benefit-title">Pedidos por WhatsApp</div>
-            <div class="benefit-sub">Coordiná envío o retiro</div>
           </div>
         </div>
       </div>
@@ -127,7 +127,7 @@
       <div class="promo-strip">
         <div>
           <h3>Ofertas imperdibles</h3>
-          <p>Aprovechá descuentos especiales y 10% OFF abonando por transferencia.</p>
+          <p>Aprovechá descuentos especiales y 10% OFF abonando por depósito o transferencia.</p>
         </div>
         <button class="btn btn-beauty" data-nav="tienda" data-preset-tag="discount">Ver ofertas →</button>
       </div>
@@ -211,7 +211,7 @@
     </div>
   </section>
 
-  <!-- VISTA 4: CARRITO -->
+  <!-- VISTA 4: CARRITO & CHECKOUT -->
   <section class="view-section" id="view-carrito">
     <div class="container" style="padding-top:26px;">
       <div class="section-head">
@@ -230,34 +230,47 @@
             <span>Subtotal</span>
             <strong id="cartSubtotal">$0</strong>
           </div>
-          <div class="summary-line" style="color:var(--success);">
-            <span>Descuento transferencia (10% OFF)</span>
+          <div class="summary-line" id="cartDiscountRow" style="color:var(--success);">
+            <span>Descuento depósito / transferencia (10% OFF)</span>
             <strong id="cartTransferDiscount">-$0</strong>
           </div>
 
           <div class="form-field" style="margin-top:14px;">
+            <label>Nombre y apellido *</label>
+            <input type="text" id="checkoutCustomerName" placeholder="Tu nombre completo" />
+          </div>
+
+          <div class="form-field">
+            <label>Email o teléfono de contacto *</label>
+            <input type="text" id="checkoutCustomerContact" placeholder="tuemail@ejemplo.com / 2657..." />
+          </div>
+
+          <div class="form-field">
             <label>Método de entrega</label>
             <label class="filter-option"><input type="radio" name="deliveryMethod" value="Retiro en local" checked /> Retiro en local</label>
             <label class="filter-option"><input type="radio" name="deliveryMethod" value="Envío a domicilio" /> Envío a domicilio</label>
           </div>
 
           <div class="form-field">
-            <label>Forma de pago para el resumen</label>
+            <label>Medio de pago</label>
             <select id="paymentMethodSelect">
-              <option value="Transferencia (10% OFF)">Transferencia (10% OFF aplicado)</option>
-              <option value="Efectivo / Coordinar">Efectivo o coordinación</option>
-              <option value="3 cuotas sin interés">3 cuotas sin interés</option>
+              <option value="deposito">Depósito / Transferencia bancaria (10% OFF)</option>
+              <option value="mercadopago">Mercado Pago / Tarjeta de crédito o débito</option>
             </select>
           </div>
 
-          <div class="summary-total">
-            <span>Total</span>
+          <div id="paymentDetailsBox" style="background:var(--surface-soft); border:1px solid var(--border); border-radius:14px; padding:14px; margin-top:12px; font-size:0.86rem;"></div>
+
+          <div class="summary-total" style="margin-top:16px;">
+            <span>Total a pagar</span>
             <span id="cartGrandTotal">$0</span>
           </div>
 
-          <button class="btn btn-whatsapp" style="width:100%; margin-top:18px;" id="sendOrderWhatsappBtn">
-            Finalizar por WhatsApp
+          <button class="btn btn-beauty" style="width:100%; margin-top:18px;" id="confirmCheckoutBtn">
+            Confirmar pedido
           </button>
+
+          <div id="checkoutResultBox" style="display:none; margin-top:16px; background:#f4fbf6; border:1px solid #b8e2c4; color:#1f5e33; padding:14px; border-radius:14px; font-size:0.86rem;"></div>
         </div>
       </div>
     </div>
@@ -330,7 +343,7 @@
             </div>
             <div class="admin-card">
               <h3 style="font-family:var(--font-display); font-size:1.6rem; color:var(--pink-deep); margin-bottom:12px;">Resumen rápido del catálogo</h3>
-              <p style="color:var(--text-muted); font-size:0.9rem;">Desde el menú lateral podés crear productos, subir fotos, cargar variantes/tonos, administrar categorías, marcas, descuentos, banners y ajustar el WhatsApp de la tienda.</p>
+              <p style="color:var(--text-muted); font-size:0.9rem;">Desde el menú lateral podés crear productos, subir fotos, cargar variantes/tonos, administrar categorías, marcas, descuentos, banners y ajustar los medios de pago de la tienda.</p>
             </div>
           </div>
 
@@ -513,7 +526,7 @@
               <form id="saveSettingsForm">
                 <div class="form-grid-2">
                   <div class="form-field">
-                    <label>WhatsApp de pedidos (código país + número, sin +)</label>
+                    <label>Teléfono / WhatsApp de contacto (opcional)</label>
                     <input type="text" id="cfgWhatsapp" placeholder="5492657000000" />
                   </div>
                   <div class="form-field">
@@ -529,6 +542,29 @@
                   <label>Descripción en footer</label>
                   <input type="text" id="cfgFooterAbout" placeholder="Tu tienda de maquillaje y belleza." />
                 </div>
+
+                <h4 style="font-family:var(--font-display); font-size:1.35rem; color:var(--pink-deep); margin:18px 0 10px;">Depósito / Transferencia bancaria</h4>
+                <div class="form-grid-2">
+                  <div class="form-field">
+                    <label>Alias</label>
+                    <input type="text" id="cfgBankAlias" placeholder="CAMILU.MAQUILLAJES.MP" />
+                  </div>
+                  <div class="form-field">
+                    <label>CBU / CVU</label>
+                    <input type="text" id="cfgBankCbu" placeholder="0000003100012345678901" />
+                  </div>
+                </div>
+                <div class="form-field">
+                  <label>Titular de la cuenta</label>
+                  <input type="text" id="cfgBankHolder" placeholder="Camilú Maquillajes" />
+                </div>
+
+                <h4 style="font-family:var(--font-display); font-size:1.35rem; color:var(--pink-deep); margin:18px 0 10px;">Mercado Pago / Tarjeta</h4>
+                <div class="form-field">
+                  <label>Enlace de pago / checkout (https://...)</label>
+                  <input type="url" id="cfgMpLink" placeholder="https://link.mercadopago.com.ar/..." />
+                </div>
+
                 <button type="submit" class="btn btn-beauty">Guardar ajustes</button>
               </form>
             </div>
@@ -603,9 +639,9 @@
           </div>
         </div>
         <div>
-          <h4 style="font-size:0.92rem; margin-bottom:10px; color:#f9dce4;">Contacto & Redes</h4>
-          <p style="font-size:0.86rem; color:#d6c2ca; margin-bottom:6px;" id="footerWhatsappInfo">WhatsApp directo habilitado</p>
-          <p style="font-size:0.86rem; color:#d6c2ca;">Instagram · TikTok · Envíos a todo el país</p>
+          <h4 style="font-size:0.92rem; margin-bottom:10px; color:#f9dce4;">Medios de Pago & Envíos</h4>
+          <p style="font-size:0.86rem; color:#d6c2ca; margin-bottom:6px;">Mercado Pago · Tarjetas de crédito y débito</p>
+          <p style="font-size:0.86rem; color:#d6c2ca;">Depósito / Transferencia · Envíos a todo el país</p>
         </div>
       </div>
       <div class="footer-bottom">
@@ -924,10 +960,49 @@
       navigateTo('detalle');
     }
 
+    function renderPaymentDetailsBox() {
+      const box = document.getElementById('paymentDetailsBox');
+      const confirmBtn = document.getElementById('confirmCheckoutBtn');
+      const method = document.getElementById('paymentMethodSelect')?.value || 'deposito';
+      if (!box) return;
+
+      if (method === 'deposito') {
+        const alias = state.settings.bank_alias || 'Configurar Alias en el panel';
+        const cbu = state.settings.bank_cbu || 'Configurar CBU/CVU en el panel';
+        const holder = state.settings.bank_holder || 'Camilú Maquillajes';
+
+        box.innerHTML = `
+          <div style="font-weight:700; color:var(--pink-deep); margin-bottom:6px;">Datos para depósito o transferencia (10% OFF):</div>
+          <div style="margin-bottom:4px;"><strong>Titular:</strong> ${holder}</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;">
+            <span><strong>Alias:</strong> ${alias}</span>
+            <button type="button" class="btn btn-outline btn-sm" data-copy-text="${alias}">Copiar</button>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+            <span style="word-break:break-all;"><strong>CBU/CVU:</strong> ${cbu}</span>
+            <button type="button" class="btn btn-outline btn-sm" data-copy-text="${cbu}">Copiar</button>
+          </div>
+        `;
+        if (confirmBtn) confirmBtn.textContent = 'Confirmar pedido con depósito / transferencia';
+      } else {
+        const mpLink = state.settings.mercadopago_link || '';
+        box.innerHTML = `
+          <div style="font-weight:700; color:var(--pink-deep); margin-bottom:6px;">Pago online con Mercado Pago / Tarjeta:</div>
+          <p style="color:var(--text-muted); margin:0;">
+            ${mpLink
+              ? 'Al confirmar tu pedido se abrirá el checkout seguro de Mercado Pago para abonar con tarjeta de crédito, débito o dinero en cuenta.'
+              : 'Aboná con tarjetas de crédito, débito o saldo en Mercado Pago al confirmar tu compra.'}
+          </p>
+        `;
+        if (confirmBtn) confirmBtn.textContent = mpLink ? 'Confirmar e ir a pagar con Mercado Pago' : 'Confirmar pedido con Mercado Pago / Tarjeta';
+      }
+    }
+
     function renderCartPage() {
       const itemsEl = document.getElementById('cartItemsContainer');
       const subEl = document.getElementById('cartSubtotal');
       const discEl = document.getElementById('cartTransferDiscount');
+      const discRow = document.getElementById('cartDiscountRow');
       const totEl = document.getElementById('cartGrandTotal');
       const shipNotice = document.getElementById('freeShippingNotice');
 
@@ -954,11 +1029,12 @@
       }
 
       const subtotal = state.cart.reduce((acc, i) => acc + Number(i.price) * Number(i.qty || 1), 0);
-      const paymentVal = document.getElementById('paymentMethodSelect')?.value || 'Transferencia (10% OFF)';
-      const discount = paymentVal.includes('10% OFF') ? Math.round(subtotal * 0.1) : 0;
+      const paymentVal = document.getElementById('paymentMethodSelect')?.value || 'deposito';
+      const discount = paymentVal === 'deposito' ? Math.round(subtotal * 0.1) : 0;
       const grandTotal = Math.max(0, subtotal - discount);
 
       if (subEl) subEl.textContent = formatARS(subtotal);
+      if (discRow) discRow.style.display = paymentVal === 'deposito' ? 'flex' : 'none';
       if (discEl) discEl.textContent = `-${formatARS(discount)}`;
       if (totEl) totEl.textContent = formatARS(grandTotal);
 
@@ -969,9 +1045,11 @@
             ? '¡Ya tenés envío gratis habilitado!'
             : `Agregá ${formatARS(freeShipMin - subtotal)} más para envío gratis.`;
         } else {
-          shipNotice.textContent = 'Coordiná envío o retiro directo por WhatsApp.';
+          shipNotice.textContent = 'Envíos a todo el país y retiro en local.';
         }
       }
+
+      renderPaymentDetailsBox();
     }
 
     function renderFavoritesPage() {
@@ -996,15 +1074,29 @@
         if (el) el.textContent = state.settings.footer_about;
         if (inp) inp.value = state.settings.footer_about;
       }
-      if (state.settings.whatsapp_number) {
+      if (state.settings.whatsapp_number !== undefined) {
         const inp = document.getElementById('cfgWhatsapp');
-        const info = document.getElementById('footerWhatsappInfo');
         if (inp) inp.value = state.settings.whatsapp_number;
-        if (info) info.textContent = `WhatsApp: +${state.settings.whatsapp_number}`;
       }
       if (state.settings.free_shipping_min !== undefined) {
         const inp = document.getElementById('cfgFreeShip');
         if (inp) inp.value = state.settings.free_shipping_min;
+      }
+      if (state.settings.bank_alias !== undefined) {
+        const inp = document.getElementById('cfgBankAlias');
+        if (inp) inp.value = state.settings.bank_alias;
+      }
+      if (state.settings.bank_cbu !== undefined) {
+        const inp = document.getElementById('cfgBankCbu');
+        if (inp) inp.value = state.settings.bank_cbu;
+      }
+      if (state.settings.bank_holder !== undefined) {
+        const inp = document.getElementById('cfgBankHolder');
+        if (inp) inp.value = state.settings.bank_holder;
+      }
+      if (state.settings.mercadopago_link !== undefined) {
+        const inp = document.getElementById('cfgMpLink');
+        if (inp) inp.value = state.settings.mercadopago_link;
       }
     }
 
@@ -1031,6 +1123,7 @@
       applySettingsUI();
       renderHome();
       if (state.view === 'tienda') renderCatalog();
+      if (state.view === 'carrito') renderCartPage();
       if (state.view === 'favoritos') renderFavoritesPage();
     }
 
@@ -1146,6 +1239,18 @@
       if (navEl) {
         e.preventDefault();
         navigateTo(navEl.dataset.nav, navEl.dataset.presetTag || null);
+        return;
+      }
+
+      const copyBtn = e.target.closest('[data-copy-text]');
+      if (copyBtn) {
+        const text = copyBtn.dataset.copyText || '';
+        if (text && navigator.clipboard) {
+          await navigator.clipboard.writeText(text);
+          const orig = copyBtn.textContent;
+          copyBtn.textContent = 'Copiado ✓';
+          setTimeout(() => { copyBtn.textContent = orig; }, 1600);
+        }
         return;
       }
 
@@ -1320,23 +1425,50 @@
       renderFavoritesPage();
     });
 
-    document.getElementById('sendOrderWhatsappBtn')?.addEventListener('click', () => {
+    document.getElementById('confirmCheckoutBtn')?.addEventListener('click', () => {
       if (!state.cart.length) return alert('Tu carrito está vacío.');
-      const phone = String(state.settings.whatsapp_number || '5492657000000').replace(/\D/g, '');
-      const delivery = document.querySelector('input[name="deliveryMethod"]:checked')?.value || 'Retiro en local';
-      const payment = document.getElementById('paymentMethodSelect')?.value || 'Transferencia (10% OFF)';
-      const subtotal = state.cart.reduce((acc, i) => acc + Number(i.price) * Number(i.qty || 1), 0);
-      const discount = payment.includes('10% OFF') ? Math.round(subtotal * 0.1) : 0;
-      const total = Math.max(0, subtotal - discount);
+      const customerName = document.getElementById('checkoutCustomerName')?.value.trim();
+      const customerContact = document.getElementById('checkoutCustomerContact')?.value.trim();
+      if (!customerName || !customerContact) {
+        return alert('Por favor completá tu nombre y email o teléfono para registrar el pedido.');
+      }
 
-      const lines = [
-        'Hola Camilú Maquillajes! Quiero realizar este pedido:',
-        ...state.cart.map(i => `• ${i.qty}x ${i.name}${i.variantName ? ` (${i.variantName})` : ''} - ${formatARS(i.price * i.qty)}`),
-        `Entrega: ${delivery}`,
-        `Pago: ${payment}`,
-        `Total: ${formatARS(total)}`
-      ];
-      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank');
+      const delivery = document.querySelector('input[name="deliveryMethod"]:checked')?.value || 'Retiro en local';
+      const payment = document.getElementById('paymentMethodSelect')?.value || 'deposito';
+      const subtotal = state.cart.reduce((acc, i) => acc + Number(i.price) * Number(i.qty || 1), 0);
+      const discount = payment === 'deposito' ? Math.round(subtotal * 0.1) : 0;
+      const total = Math.max(0, subtotal - discount);
+      const orderCode = 'CM-' + Date.now().toString().slice(-6);
+
+      const resultBox = document.getElementById('checkoutResultBox');
+      if (resultBox) {
+        resultBox.style.display = 'block';
+        if (payment === 'deposito') {
+          resultBox.innerHTML = `
+            <strong>¡Pedido ${orderCode} registrado!</strong><br>
+            Cliente: ${customerName} (${customerContact})<br>
+            Entrega: ${delivery} · Total: <strong>${formatARS(total)}</strong><br>
+            Realizá el depósito o transferencia por <strong>${formatARS(total)}</strong> al Alias <strong>${state.settings.bank_alias || '-'}</strong> (CBU/CVU: ${state.settings.bank_cbu || '-'}) indicando el código <strong>${orderCode}</strong> en la referencia.
+          `;
+        } else {
+          const mpLink = state.settings.mercadopago_link || '';
+          resultBox.innerHTML = `
+            <strong>¡Pedido ${orderCode} listo para abonar!</strong><br>
+            Cliente: ${customerName} (${customerContact})<br>
+            Entrega: ${delivery} · Total: <strong>${formatARS(total)}</strong><br>
+            ${mpLink
+              ? `Si no se abrió automáticamente, <a href="${mpLink}" target="_blank" rel="noopener noreferrer" style="font-weight:700; text-decoration:underline;">hacé clic acá para pagar con Mercado Pago / Tarjeta</a>.`
+              : 'Medio seleccionado: Mercado Pago / Tarjeta.'}
+          `;
+          if (mpLink) {
+            window.open(mpLink, '_blank', 'noopener,noreferrer');
+          }
+        }
+      }
+
+      state.cart = [];
+      persistCart();
+      renderCartPage();
     });
 
     document.getElementById('adminLoginForm')?.addEventListener('submit', async (e) => {
@@ -1486,14 +1618,19 @@
     document.getElementById('saveSettingsForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const entries = [
-        { key: 'whatsapp_number', value: document.getElementById('cfgWhatsapp').value.trim(), description: 'Número de WhatsApp' },
+        { key: 'whatsapp_number', value: document.getElementById('cfgWhatsapp').value.trim(), description: 'Teléfono de contacto' },
         { key: 'free_shipping_min', value: Number(document.getElementById('cfgFreeShip').value || 0), description: 'Mínimo envío gratis' },
         { key: 'top_bar_text', value: document.getElementById('cfgTopBar').value.trim(), description: 'Texto barra superior' },
-        { key: 'footer_about', value: document.getElementById('cfgFooterAbout').value.trim(), description: 'Texto footer' }
+        { key: 'footer_about', value: document.getElementById('cfgFooterAbout').value.trim(), description: 'Texto footer' },
+        { key: 'bank_alias', value: document.getElementById('cfgBankAlias').value.trim(), description: 'Alias bancario / billetera' },
+        { key: 'bank_cbu', value: document.getElementById('cfgBankCbu').value.trim(), description: 'CBU o CVU' },
+        { key: 'bank_holder', value: document.getElementById('cfgBankHolder').value.trim(), description: 'Titular de la cuenta' },
+        { key: 'mercadopago_link', value: document.getElementById('cfgMpLink').value.trim(), description: 'Enlace de pago Mercado Pago' }
       ];
 
       for (const item of entries) {
-        await supabase.from('site_settings').upsert(item, { onConflict: 'key' });
+        const { error } = await supabase.from('site_settings').upsert(item, { onConflict: 'key' });
+        if (error) return alert('Error al guardar ' + item.key + ': ' + error.message);
       }
       await loadStorefrontData();
       alert('Configuración guardada.');
