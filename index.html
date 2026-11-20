@@ -725,24 +725,28 @@
         ? `Desde ${formatARS(product.final_price)}`
         : formatARS(product.final_price);
       const hasOld = product.old_price && Number(product.old_price) > Number(product.final_price);
+      const badgeText = Number(product.discount_percent) > 0
+        ? `-${Math.round(Number(product.discount_percent))}%`
+        : (product.is_new ? 'Nuevo' : (product.is_bestseller ? 'Top' : ''));
 
       return `
         <article class="product-card" data-product-id="${product.id}">
-          <div class="product-media">
-            <img src="${imgUrl}" alt="${product.name}" loading="lazy" />
-            <button class="fav-btn ${isFav ? 'active' : ''}" data-fav-id="${product.id}" aria-label="Guardar en favoritos">
+          <div class="product-img-wrap">
+            ${badgeText ? `<span class="product-badge">${badgeText}</span>` : ''}
+            <button type="button" class="fav-btn ${isFav ? 'active' : ''}" data-fav-id="${product.id}" aria-label="Guardar en favoritos">
               ${isFav ? '♥' : '♡'}
             </button>
+            <img src="${imgUrl}" alt="${product.name}" loading="lazy" />
           </div>
-          <div class="product-body">
-            <div class="product-meta">${product.category_name || 'Belleza'}</div>
-            <h3 class="product-title">${product.name}</h3>
+          <div class="product-info">
+            <div class="product-cat">${product.category_name || 'Belleza'}</div>
+            <h3 class="product-name">${product.name}</h3>
             <div class="product-price-row">
               <span class="product-price">${priceLabel}</span>
               ${hasOld ? `<span class="product-old-price">${formatARS(product.old_price)}</span>` : ''}
             </div>
             <div class="product-actions">
-              <button class="btn btn-beauty btn-sm" data-open-detail="${product.id}">Ver detalle</button>
+              <button type="button" class="btn btn-beauty btn-sm" style="width:100%;" data-open-detail="${product.id}">Ver detalle</button>
             </div>
           </div>
         </article>
@@ -760,7 +764,7 @@
           <div class="hero-text">
             <h1>${b.title || 'Belleza que <em>te hace brillar</em>'}</h1>
             <p>${b.subtitle || 'Maquillaje, skincare y accesorios seleccionados para que te sientas increíble todos los días.'}</p>
-            <button class="btn btn-beauty" data-nav="tienda">${b.button_text || 'Descubrir colección →'}</button>
+            <button type="button" class="btn btn-beauty" data-nav="tienda">${b.button_text || 'Descubrir colección →'}</button>
           </div>
           <div class="hero-visual">
             <img src="${imgUrl}" alt="${b.title || 'Camilú Maquillajes'}" />
@@ -774,11 +778,19 @@
 
       const catGrid = document.getElementById('homeCategoriesGrid');
       if (catGrid) {
-        catGrid.innerHTML = state.categories.map(cat => `
-          <button class="category-chip" data-filter-cat="${cat.id}">
-            <span>${cat.name}</span>
-          </button>
-        `).join('');
+        catGrid.innerHTML = state.categories.map(cat => {
+          const catImg = cat.image_path
+            ? getPublicImageUrl('site-images', cat.image_path)
+            : 'https://placehold.co/120x120/f9dce4/8b2e4d?text=Cat';
+          return `
+            <button type="button" class="category-circle-card" data-filter-cat="${cat.id}">
+              <div class="category-circle-img">
+                <img src="${catImg}" alt="${cat.name}" loading="lazy" />
+              </div>
+              <span class="category-circle-name">${cat.name}</span>
+            </button>
+          `;
+        }).join('');
       }
 
       const newGrid = document.getElementById('homeNewGrid');
@@ -890,11 +902,11 @@
       if (container) {
         container.innerHTML = `
           <div class="detail-gallery">
-            <img src="${mainImg}" alt="${product.name}" id="detailMainImg" />
+            <img src="${mainImg}" alt="${product.name}" id="detailMainImg" class="detail-main-img" />
           </div>
           <div class="detail-info">
-            <div class="product-meta">${product.category_name || 'Belleza'}${product.brand_name ? ` · ${product.brand_name}` : ''}</div>
-            <h1>${product.name}</h1>
+            <div class="product-cat">${product.category_name || 'Belleza'}${product.brand_name ? ` · ${product.brand_name}` : ''}</div>
+            <h1 style="font-family:var(--font-display); font-size:2.1rem; color:var(--pink-deep); margin:6px 0 10px;">${product.name}</h1>
             <div class="product-price" style="font-size:1.5rem; margin:10px 0;">${formatARS(product.final_price)}</div>
             <p style="color:var(--text-muted); margin-bottom:16px;">${product.description || 'Producto seleccionado de Camilú Maquillajes.'}</p>
 
@@ -913,7 +925,7 @@
             ` : ''}
 
             <div style="display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;">
-              <button class="btn btn-beauty" id="detailAddCartBtn">Agregar al carrito</button>
+              <button type="button" class="btn btn-beauty" id="detailAddCartBtn">Agregar al carrito</button>
             </div>
           </div>
         `;
@@ -1019,10 +1031,10 @@
               <div style="font-size:0.88rem; color:var(--pink-deep); font-weight:600;">${formatARS(item.price)}</div>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
-              <button class="btn btn-outline btn-sm" data-cart-dec="${idx}">-</button>
+              <button type="button" class="btn btn-outline btn-sm" data-cart-dec="${idx}">-</button>
               <span>${item.qty}</span>
-              <button class="btn btn-outline btn-sm" data-cart-inc="${idx}">+</button>
-              <button class="btn btn-outline btn-sm" data-cart-rem="${idx}">✕</button>
+              <button type="button" class="btn btn-outline btn-sm" data-cart-inc="${idx}">+</button>
+              <button type="button" class="btn btn-outline btn-sm" data-cart-rem="${idx}">✕</button>
             </div>
           </div>
         `).join('');
@@ -1123,7 +1135,6 @@
       applySettingsUI();
       renderHome();
       if (state.view === 'tienda') renderCatalog();
-      if (state.view === 'carrito') renderCartPage();
       if (state.view === 'favoritos') renderFavoritesPage();
     }
 
@@ -1192,8 +1203,8 @@
             <td>Stock: ${p.stock}${varCount ? ` · ${varCount} tonos` : ''}</td>
             <td>${p.is_active ? 'Activo' : 'Oculto'}</td>
             <td style="display:flex;gap:6px;flex-wrap:wrap;">
-              <button class="btn btn-outline btn-sm" data-manage-prod="${p.id}">Tonos/Fotos</button>
-              <button class="btn btn-outline btn-sm" data-del-prod="${p.id}">Borrar</button>
+              <button type="button" class="btn btn-outline btn-sm" data-manage-prod="${p.id}">Tonos/Fotos</button>
+              <button type="button" class="btn btn-outline btn-sm" data-del-prod="${p.id}">Borrar</button>
             </td>
           </tr>
         `;
@@ -1203,7 +1214,7 @@
         <tr>
           <td>${c.name}</td>
           <td>${c.slug}</td>
-          <td><button class="btn btn-outline btn-sm" data-del-cat="${c.id}">Borrar</button></td>
+          <td><button type="button" class="btn btn-outline btn-sm" data-del-cat="${c.id}">Borrar</button></td>
         </tr>
       `).join('');
 
@@ -1211,7 +1222,7 @@
         <tr>
           <td>${b.name}</td>
           <td>${b.slug}</td>
-          <td><button class="btn btn-outline btn-sm" data-del-brand="${b.id}">Borrar</button></td>
+          <td><button type="button" class="btn btn-outline btn-sm" data-del-brand="${b.id}">Borrar</button></td>
         </tr>
       `).join('');
 
@@ -1220,7 +1231,7 @@
           <td>${d.name}</td>
           <td>${d.percent}%</td>
           <td>${d.scope}</td>
-          <td><button class="btn btn-outline btn-sm" data-del-disc="${d.id}">Borrar</button></td>
+          <td><button type="button" class="btn btn-outline btn-sm" data-del-disc="${d.id}">Borrar</button></td>
         </tr>
       `).join('');
 
@@ -1228,7 +1239,7 @@
         <tr>
           <td>${b.title}</td>
           <td>${b.subtitle || ''}</td>
-          <td><button class="btn btn-outline btn-sm" data-del-ban="${b.id}">Borrar</button></td>
+          <td><button type="button" class="btn btn-outline btn-sm" data-del-ban="${b.id}">Borrar</button></td>
         </tr>
       `).join('');
     }
@@ -1679,7 +1690,7 @@
             ${v.name}
           </td>
           <td>${v.stock}</td>
-          <td><button class="btn btn-outline btn-sm" data-del-tone="${v.id}">Borrar</button></td>
+          <td><button type="button" class="btn btn-outline btn-sm" data-del-tone="${v.id}">Borrar</button></td>
         </tr>
       `).join('');
     }
